@@ -1,0 +1,942 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>رحلة الفتوحات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600&family=Reem+Kufi:wght@500;700&display=swap">
+<style>
+/* Concept: you travel down a luminous thread that runs into the screen. Each conquest is a station on the thread: a glass card above a dot-matrix map drawn on the floor beneath it, with the next conquests queued behind in the distance. Dark-first. */
+:root{
+  --bg:#060b11; --glass:rgba(13,23,35,.78); --glass-solid:#0d1723; --glass-line:rgba(160,200,235,.2);
+  --fg:#eaf1f8; --fg2:#9db2c7; --accent:#f5c451; --on-accent:#171003;
+  --land:#5d7f95; --grid:rgba(150,190,225,.14); --tile:rgba(10,20,31,.84);
+  --p-nabawi:#f5c451; --p-rashidun:#38d9a9; --p-umayyad:#5eb6ff;
+  --font-display:"Reem Kufi","Readex Pro",system-ui,sans-serif;
+  --font-body:"Readex Pro",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  --scale:16px;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#e8eff6; --glass:rgba(255,255,255,.8); --glass-solid:#ffffff; --glass-line:rgba(20,50,80,.16);
+    --fg:#0d1b29; --fg2:#41566a; --accent:#8f5200; --on-accent:#ffffff;
+    --land:#5a7d92; --grid:rgba(30,60,90,.15); --tile:rgba(255,255,255,.72);
+    --p-nabawi:#b07a00; --p-rashidun:#0a8f69; --p-umayyad:#1f6fd0;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#e8eff6; --glass:rgba(255,255,255,.8); --glass-solid:#ffffff; --glass-line:rgba(20,50,80,.16);
+  --fg:#0d1b29; --fg2:#41566a; --accent:#8f5200; --on-accent:#ffffff;
+  --land:#5a7d92; --grid:rgba(30,60,90,.15); --tile:rgba(255,255,255,.72);
+  --p-nabawi:#b07a00; --p-rashidun:#0a8f69; --p-umayyad:#1f6fd0;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#060b11; --glass:rgba(13,23,35,.78); --glass-solid:#0d1723; --glass-line:rgba(160,200,235,.2);
+  --fg:#eaf1f8; --fg2:#9db2c7; --accent:#f5c451; --on-accent:#171003;
+  --land:#5d7f95; --grid:rgba(150,190,225,.14); --tile:rgba(10,20,31,.84);
+  --p-nabawi:#f5c451; --p-rashidun:#38d9a9; --p-umayyad:#5eb6ff;
+  color-scheme:dark;
+}
+html{font-size:var(--scale)}
+html.big{--scale:19px}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);line-height:1.7;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.scroller{position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--bg)}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 38%,transparent 40%,var(--bg) 100%),linear-gradient(to bottom,var(--bg) 0,transparent 16%)}
+
+/* HUD */
+.hud{position:absolute;z-index:5}
+.top{inset-inline:16px;top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:baseline;gap:12px;min-width:0}
+.brand h1{margin:0;font-family:var(--font-display);font-weight:700;font-size:1.45rem;line-height:1.2;white-space:nowrap}
+.brand span{color:var(--fg2);font-size:.8rem;white-space:nowrap}
+.tools{display:flex;align-items:center;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:.85rem;font-variant-numeric:tabular-nums}
+.pill b{font-weight:600}
+.ibtn{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.ibtn:hover{border-color:var(--fg2)}
+.ibtn[aria-pressed="true"]{border-color:var(--accent)}
+.prog{position:absolute;z-index:6;inset-inline:0;top:0;height:3px;background:transparent}
+.prog i{display:block;height:100%;width:0;background:var(--accent);border-radius:0 3px 3px 0}
+.legend{position:absolute;z-index:5;top:64px;inset-inline-start:16px;display:flex;flex-direction:column;gap:6px;font-size:.78rem;color:var(--fg2)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+
+.rail{inset-inline-start:14px;top:50%;transform:translateY(-50%);margin-top:20px}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.rail button{position:relative;display:grid;place-items:center;width:26px;height:min(19px,2.6vh);background:none;border:0;padding:0}
+.rail .t{width:7px;height:7px;border-radius:50%;background:var(--pc);opacity:.45;transition:transform .2s,opacity .2s}
+.rail .on .t{opacity:1;transform:scale(1.9);box-shadow:0 0 0 3px var(--bg),0 0 0 4.5px var(--accent)}
+.rail .past .t{opacity:.95}
+.rail .lb{position:absolute;inset-inline-start:calc(100% + 2px);top:50%;transform:translateY(-50%);padding:1px 10px;border-radius:999px;background:var(--glass-solid);border:1px solid var(--glass-line);font-size:.74rem;white-space:nowrap;opacity:0;pointer-events:none;font-variant-numeric:tabular-nums}
+.rail button:hover .lb,.rail button:focus-visible .lb,.rail .on .lb{opacity:1}
+
+.dock{inset-inline:0;bottom:14px;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
+.dock>*{pointer-events:auto}
+.hint{font-size:.8rem;color:var(--fg2);display:flex;align-items:center;gap:8px;transition:opacity .4s}
+.hint.gone{opacity:0;pointer-events:none}
+.hint svg{animation:bob 1.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(4px)}}
+.ctrls{display:flex;gap:8px;padding:6px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 18px;border-radius:999px;background:transparent;border:0;font-weight:500}
+.btn:hover{background:rgba(127,160,190,.16)}
+.btn[disabled]{opacity:.35;cursor:default}
+.btn.go{background:var(--accent);color:var(--on-accent);font-weight:600;min-width:118px}
+.btn.go:hover{filter:brightness(1.08)}
+
+.btn.mic{padding:0;width:42px;position:relative}
+.btn.mic.on{background:var(--accent);color:var(--on-accent)}
+.btn.mic.on::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--accent);animation:ring 1.6s ease-out infinite}
+@keyframes ring{from{transform:scale(.85);opacity:.9}to{transform:scale(1.35);opacity:0}}
+.btn.say{padding:0;width:42px;position:relative}
+.btn.say.on{background:var(--accent);color:var(--on-accent)}
+.btn.say.talk::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--accent);animation:ring 1.6s ease-out infinite}
+@media (max-width:480px){.btn .lbl{display:none}.btn:not(.go):not(.mic):not(.say){padding:0;width:42px}}
+@media (max-width:759px){#rateBtn{display:none!important}}
+.voice{display:none;align-items:center;gap:10px;max-width:min(92vw,560px);padding:6px 16px;min-height:36px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:.85rem}
+.voice.show{display:inline-flex}
+.voice .vd{width:9px;height:9px;border-radius:50%;background:var(--fg2);flex:none}
+.voice.live .vd{background:var(--p-rashidun)}
+.voice.warn{border-color:var(--accent)}
+.voice.warn .vd{background:var(--accent)}
+.voice.hit{border-color:var(--p-rashidun)}
+.mini{inset-inline-end:16px;bottom:16px;width:250px;border-radius:16px;overflow:hidden;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mini small{display:block;padding:6px 12px 0;font-size:.7rem;color:var(--fg2)}
+.mini canvas{display:block;width:100%;aspect-ratio:2.5/1;cursor:pointer}
+
+/* بطاقات المحطات */
+#cards{position:absolute;inset:0;z-index:4;pointer-events:none}
+.sc{--cw:min(680px,calc(100vw - 32px));position:absolute;left:0;top:0;width:var(--cw);transform-origin:50% 100%;visibility:hidden;opacity:0;pointer-events:auto;border-radius:26px;background:var(--glass);border:1px solid var(--glass-line);padding:20px 24px;box-shadow:0 24px 70px rgba(0,0,0,.28);cursor:pointer;will-change:transform,opacity}
+.sc.act{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);cursor:default}
+.sc-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:4px 28px}
+.yrs{display:flex;flex-direction:column;line-height:1}
+.yrs .g{display:flex;align-items:baseline;gap:8px}
+.yrs .gn{font-family:var(--font-display);font-weight:700;font-size:3.6rem;letter-spacing:0;color:var(--pc);font-variant-numeric:tabular-nums}
+.yrs .gu,.yrs .hu{font-size:.85rem;color:var(--fg2)}
+.yrs .h{display:flex;align-items:baseline;gap:6px;margin-top:4px;color:var(--fg2)}
+.yrs .hn{font-family:var(--font-display);font-weight:700;font-size:1.5rem;color:var(--fg);font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px;font-size:.78rem}
+.period{display:inline-flex;align-items:center;gap:8px;padding:2px 12px;border-radius:999px;border:1.5px solid var(--pc);font-weight:600}
+.period::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--pc)}
+.kind{display:inline-flex;align-items:center;gap:6px;color:var(--fg2)}
+.sc h2{margin:0;font-family:var(--font-display);font-weight:700;font-size:1.75rem;line-height:1.35;text-wrap:balance}
+.place,.who{margin:2px 0 0;display:flex;gap:8px;align-items:flex-start;color:var(--fg2);font-size:.9rem}
+.place svg,.who svg{margin-top:.3em}
+.who strong{color:var(--fg);font-weight:500}
+.more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s ease}
+.act .more{grid-template-rows:1fr}
+.more-in{min-height:0;overflow:hidden;opacity:0;transition:opacity .35s .1s}
+.act .more-in{opacity:1}
+.blk{margin-top:10px}
+.blk h3{margin:0;font-size:.74rem;font-weight:600;letter-spacing:.05em;color:var(--pc)}
+.blk p{margin:0;font-size:.98rem;max-width:60ch}
+.tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:12px 0 0;padding:0}
+.tags li{font-size:.78rem;padding:1px 12px;border-radius:8px;border:1px solid var(--glass-line);color:var(--fg2)}
+.sc:not(.act) .chips,.sc:not(.act) .place{display:none}
+.sc:not(.act){padding:14px 22px}
+.sc:not(.act) .yrs .gn{font-size:2.6rem}
+.sc:not(.act) .yrs .h{display:none}
+
+@media (min-width:760px){
+  .sc-grid{grid-template-columns:170px minmax(0,1fr)}
+  .sc .col-r{grid-column:2;grid-row:1}
+  .sc .yrs{grid-column:1;grid-row:1}
+  .sc:not(.act) .sc-grid{align-items:center}
+}
+@media (max-width:759px){
+  .brand span,.legend,.mini,.rail{display:none}
+  .brand h1{font-size:1.25rem}
+  .sc{padding:16px 18px}
+  .sc h2{font-size:1.45rem}
+  .yrs .gn{font-size:2.8rem}
+  .sc-grid .yrs{flex-direction:row;align-items:baseline;gap:16px}
+  .yrs .h{margin-top:0}
+  .sc.act .yrs{margin-bottom:6px}
+  .btn{padding:0 14px}
+  .btn.go{min-width:104px}
+  .sc:not(.act) .sc-grid{grid-template-columns:auto minmax(0,1fr);align-items:center}
+  .sc:not(.act) .sc-grid .yrs{margin:0}
+  .sc:not(.act) h2{font-size:1.2rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .more,.more-in,.rail .t{transition:none}
+  .hint svg{animation:none}
+  .btn.mic.on::after,.btn.say.talk::after{animation:none}
+}
+.nogl-msg{position:absolute;z-index:3;inset-inline:16px;top:96px;text-align:center;color:var(--fg2);display:none}
+.nogl .nogl-msg{display:block}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-state" viewBox="0 0 24 24"><path d="M4 20h16M6 20v-6a6 6 0 0 1 12 0v6M12 3v3"/></symbol>
+  <symbol id="i-conquest" viewBox="0 0 24 24"><path d="M6 21V4M6 5h11l-2.5 3.5L17 12H6"/></symbol>
+  <symbol id="i-battle" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19M3 9l6-6M21 9l-6-6"/></symbol>
+  <symbol id="i-sea" viewBox="0 0 24 24"><path d="M3 8c3 0 3-2 6-2s3 2 6 2 3-2 6-2M3 13c3 0 3-2 6-2s3 2 6 2 3-2 6-2M3 18c3 0 3-2 6-2s3 2 6 2 3-2 6-2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3.2-6 7-6s7 2 7 6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z" fill="currentColor"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3.5"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM6 11a6 6 0 0 0 12 0M12 17v4M9 21h6"/></symbol>
+  <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zM16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></symbol>
+  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></symbol>
+</svg>
+
+<div class="scroller" id="scroller" dir="rtl" lang="ar">
+  <div class="stage" id="stage">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="vignette"></div>
+    <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+
+    <header class="hud top">
+      <div class="brand"><h1>رحلة الفتوحات</h1><span>من الهجرة إلى آخر فتوحات الدولة الأموية</span></div>
+      <div class="tools">
+        <button class="pill" id="rateBtn" type="button" hidden title="سرعة القراءة">السرعة: عادية</button>
+        <span class="pill" aria-label="رقم الحدث الحالي"><b id="cnt"></b></span>
+        <button class="ibtn" id="textBtn" type="button" aria-pressed="false" aria-label="تكبير الخط" title="تكبير الخط"><b>أ</b></button>
+        <button class="ibtn" id="themeBtn" type="button" aria-label="تبديل الوضع الليلي والنهاري" title="تبديل الوضع الليلي والنهاري"><svg class="i"><use href="#i-theme"/></svg></button>
+      </div>
+    </header>
+    <div class="legend" id="legend" aria-hidden="true"></div>
+    <nav class="hud rail" id="rail" aria-label="الخط الزمني"><ol id="railList"></ol></nav>
+
+    <div id="cards"></div>
+    <p class="nogl-msg">تعذّر عرض المشهد ثلاثي الأبعاد على هذا الجهاز، لكن كل المحتوى متاح بالتمرير.</p>
+
+    <figure class="hud mini" style="margin:0">
+      <small>خريطة الرحلة (اضغط على نقطة للانتقال)</small>
+      <canvas id="mini" aria-label="خريطة مسطّحة لكل المواقع"></canvas>
+    </figure>
+
+    <div class="hud dock">
+      <div class="hint" id="hint"><svg class="i"><use href="#i-down"/></svg><span>مرّر للأسفل لتنتقل إلى الفتح التالي</span></div>
+      <div class="voice" id="voice" role="status"><span class="vd"></span><span id="voiceTxt"></span></div>
+      <div class="ctrls">
+        <button class="btn" id="prevBtn" type="button" aria-label="السابق"><svg class="i"><use href="#i-up"/></svg><span class="lbl">السابق</span></button>
+        <button class="btn go" id="playBtn" type="button" aria-pressed="false"><svg class="i"><use id="playUse" href="#i-play"/></svg><span id="playTxt">تشغيل</span></button>
+        <button class="btn" id="nextBtn" type="button" aria-label="التالي"><span class="lbl">التالي</span><svg class="i"><use href="#i-down"/></svg></button>
+        <button class="btn say" id="speakBtn" type="button" aria-pressed="false" aria-label="تشغيل القراءة الصوتية" title="القراءة الصوتية: يقرأ كل فتح بصوت عالٍ"><svg class="i"><use href="#i-speaker"/></svg></button>
+        <button class="btn mic" id="voiceBtn" type="button" aria-pressed="false" aria-label="تشغيل الأوامر الصوتية" title="الأوامر الصوتية: قُل «التالي» أو «السابق»"><svg class="i"><use href="#i-mic"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="sr" id="live" aria-live="polite"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- المحتوى ---------- */
+var PERIODS={
+  nabawi:{name:"عصر النبوة",v:"--p-nabawi"},
+  rashidun:{name:"الخلافة الراشدة",v:"--p-rashidun"},
+  umayyad:{name:"الدولة الأموية",v:"--p-umayyad"}
+};
+var KINDS={
+  state:{label:"تأسيس",icon:"#i-state"},
+  conquest:{label:"فتح",icon:"#i-conquest"},
+  battle:{label:"معركة",icon:"#i-battle"},
+  sea:{label:"معركة بحرية",icon:"#i-sea"}
+};
+var EV=[
+ {h:1,g:622,period:"nabawi",kind:"state",name:"الهجرة إلى المدينة",short:"الهجرة",place:"المدينة المنورة، الحجاز (السعودية)",lat:24.47,lon:39.61,r:4,who:"النبي محمد ﷺ",
+  what:"هاجر النبي ﷺ من مكة إلى المدينة. وأسّس فيها أول دولة للمسلمين، وبنى المسجد النبوي.",
+  why:"من هذه السنة بدأ التقويم الهجري، ومن المدينة خرجت الجيوش بعد ذلك.",tags:["الهجرة","المدينة","دولة"]},
+ {h:8,g:630,period:"nabawi",kind:"conquest",name:"فتح مكة",short:"مكة",place:"مكة المكرمة، الحجاز (السعودية)",lat:21.42,lon:39.83,r:4,who:"النبي محمد ﷺ",
+  what:"دخل النبي ﷺ مكة مع نحو عشرة آلاف من أصحابه، وعفا عن أهلها. وأُزيلت الأصنام من الكعبة.",
+  why:"صارت مكة مركز الإسلام، ودخل الناس في الإسلام جماعات.",tags:["مكة","الكعبة","العفو"]},
+ {h:13,g:634,period:"rashidun",kind:"conquest",name:"فتح بصرى",short:"بصرى",place:"بصرى الشام، جنوب سوريا",lat:32.52,lon:36.48,r:5,who:"خالد بن الوليد وشرحبيل بن حسنة",
+  what:"كانت بصرى أول مدينة كبيرة تُفتح في بلاد الشام. وصالح أهلها المسلمين.",
+  why:"فتحت للمسلمين الطريق إلى دمشق.",tags:["الشام","مدينة محصّنة","صلح"]},
+ {h:13,g:634,period:"rashidun",kind:"battle",name:"معركة أجنادين",short:"أجنادين",place:"قرب بيت جبرين، فلسطين",lat:31.7,lon:34.9,r:5,who:"عمرو بن العاص وخالد بن الوليد",
+  what:"التقى المسلمون بجيش الروم في فلسطين. وانتصروا بعد قتال شديد.",
+  why:"فتحت المعركة الطريق إلى مدن الشام الكبرى.",tags:["فلسطين","الروم","نصر"]},
+ {h:14,g:635,period:"rashidun",kind:"conquest",name:"فتح دمشق",short:"دمشق",place:"دمشق، سوريا",lat:33.51,lon:36.29,r:6,who:"خالد بن الوليد وأبو عبيدة بن الجراح",
+  what:"حاصر المسلمون دمشق أشهرًا ثم دخلوها. وكتبوا لأهلها أمانًا على أنفسهم وكنائسهم.",
+  why:"صارت دمشق بعد ذلك عاصمة الدولة الأموية.",tags:["دمشق","حصار","أمان"]},
+ {h:15,g:636,period:"rashidun",kind:"battle",name:"معركة اليرموك",short:"اليرموك",place:"نهر اليرموك، جنوب سوريا",lat:32.78,lon:35.95,r:6,who:"خالد بن الوليد",
+  what:"التقى جيش المسلمين بجيش الروم البيزنطيين قرب نهر اليرموك. وانتصر المسلمون في معركة استمرت عدة أيام.",
+  why:"بعد هذه المعركة خرجت بلاد الشام من حكم الروم.",tags:["الروم","اليرموك","نصر"]},
+ {h:15,g:636,period:"rashidun",kind:"battle",name:"معركة القادسية",short:"القادسية",place:"القادسية، جنوب العراق",lat:31.95,lon:44.35,r:9,who:"سعد بن أبي وقاص",
+  what:"واجه المسلمون جيش الفرس الساسانيين. وانتصروا بعد أيام طويلة من القتال.",
+  why:"انفتح الطريق إلى عاصمة الفرس.",tags:["الفرس","العراق","نصر"]},
+ {h:15,g:636,period:"rashidun",kind:"conquest",name:"فتح حمص",short:"حمص",place:"حمص، وسط سوريا",lat:34.73,lon:36.72,r:5,who:"أبو عبيدة بن الجراح",
+  what:"صالح أهل حمص المسلمين بعد حصار قصير. وصارت المدينة قاعدة لهم في وسط الشام.",
+  why:"من حمص تقدّم المسلمون شمالًا في بلاد الشام.",tags:["حمص","صلح","الشام"]},
+ {h:16,g:637,period:"rashidun",kind:"conquest",name:"فتح المدائن",short:"المدائن",place:"المدائن، قرب بغداد (العراق)",lat:33.09,lon:44.58,r:9,who:"سعد بن أبي وقاص",
+  what:"عبر المسلمون نهر دجلة ودخلوا المدائن، عاصمة الفرس. وتركها الملك يزدجرد.",
+  why:"سقطت عاصمة الدولة الساسانية.",tags:["دجلة","عاصمة الفرس","سقوط"]},
+ {h:16,g:637,period:"rashidun",kind:"conquest",name:"فتح بيت المقدس",short:"القدس",place:"القدس، فلسطين",lat:31.78,lon:35.23,r:5,who:"عمر بن الخطاب",
+  what:"جاء الخليفة عمر بنفسه ليتسلّم المدينة. وكتب لأهلها «العهدة العمرية» التي تحفظ أمانهم وكنائسهم.",
+  why:"صارت القدس مدينة يعيش فيها المسلمون والنصارى بأمان.",tags:["القدس","العهدة العمرية","أمان"]},
+ {h:20,g:641,period:"rashidun",kind:"conquest",name:"فتح مصر",short:"مصر",place:"حصن بابليون، القاهرة القديمة (مصر)",lat:30.01,lon:31.23,r:8,who:"عمرو بن العاص",
+  what:"دخل عمرو بن العاص مصر بجيش صغير. وحاصر حصن بابليون حتى استسلم الروم.",
+  why:"بنى المسلمون مدينة الفسطاط، أول عاصمة إسلامية في مصر.",tags:["النيل","الفسطاط","الروم"]},
+ {h:21,g:642,period:"rashidun",kind:"conquest",name:"فتح الإسكندرية",short:"الإسكندرية",place:"الإسكندرية، مصر",lat:31.2,lon:29.92,r:6,who:"عمرو بن العاص",
+  what:"سلّمت الإسكندرية بعد اتفاق مع الروم. وكانت أكبر مدن مصر على البحر المتوسط.",
+  why:"صارت مصر كلها تحت حكم المسلمين.",tags:["الإسكندرية","البحر المتوسط","اتفاق"]},
+ {h:21,g:642,period:"rashidun",kind:"battle",name:"معركة نهاوند",short:"نهاوند",place:"نهاوند، غرب إيران",lat:34.19,lon:48.37,r:11,who:"النعمان بن مقرن",
+  what:"انتصر المسلمون على جيش فارسي كبير. ويسمّي المؤرخون هذه المعركة «فتح الفتوح».",
+  why:"انتهت قوة الفرس الكبرى، وتتابع فتح بلاد فارس.",tags:["فارس","فتح الفتوح","نصر"]},
+ {h:23,g:643,period:"rashidun",kind:"conquest",name:"فتح طرابلس",short:"طرابلس",place:"طرابلس، ليبيا",lat:32.89,lon:13.19,r:9,who:"عمرو بن العاص",
+  what:"تقدّم عمرو بن العاص غربًا من مصر، ففتح برقة ثم طرابلس.",
+  why:"بدأ فتح شمال إفريقيا.",tags:["ليبيا","شمال إفريقيا","غربًا"]},
+ {h:27,g:647,period:"rashidun",kind:"battle",name:"معركة سبيطلة",short:"سبيطلة",place:"سبيطلة، تونس",lat:35.23,lon:9.12,r:8,who:"عبد الله بن سعد بن أبي سرح",
+  what:"تقدّم المسلمون من مصر إلى إفريقية (تونس اليوم). وانتصروا على جيش الروم بقيادة جريجوريوس.",
+  why:"ضعف حكم الروم في شمال إفريقيا، وانفتح الطريق لحملات المسلمين بعدها.",tags:["إفريقية","جريجوريوس","نصر"]},
+ {h:28,g:649,period:"rashidun",kind:"sea",name:"فتح قبرص",short:"قبرص",place:"جزيرة قبرص، شرق البحر المتوسط",lat:35.18,lon:33.9,r:3.5,who:"معاوية بن أبي سفيان",
+  what:"أرسل معاوية أول حملة بحرية كبيرة للمسلمين إلى جزيرة قبرص. وصالحه أهلها على دفع الجزية.",
+  why:"بدأت قوة المسلمين البحرية في البحر المتوسط.",tags:["قبرص","أسطول","جزيرة"]},
+ {h:31,g:651,period:"rashidun",kind:"conquest",name:"فتح مرو",short:"مرو",place:"مرو في خراسان (تركمانستان اليوم)",lat:37.66,lon:62.19,r:9,who:"الأحنف بن قيس",
+  what:"فتح الأحنف بن قيس مدينة مرو في خراسان. وقُتل بعدها الملك الفارسي يزدجرد الثالث.",
+  why:"انتهى حكم الدولة الساسانية نهائيًا.",tags:["خراسان","مرو","الساسانيون"]},
+ {h:34,g:655,period:"rashidun",kind:"sea",name:"معركة ذات الصواري",short:"ذات الصواري",place:"البحر المتوسط، قرب سواحل تركيا",lat:36.3,lon:30.3,r:4,who:"عبد الله بن سعد بن أبي سرح",
+  what:"كانت أول معركة بحرية كبيرة للمسلمين. وانتصر أسطولهم على أسطول الروم.",
+  why:"صارت للمسلمين قوة بحرية في البحر المتوسط.",tags:["أسطول","البحر","الروم"]},
+ {h:50,g:670,period:"umayyad",kind:"state",name:"تأسيس القيروان",short:"القيروان",place:"القيروان، تونس",lat:35.68,lon:10.1,r:9,who:"عقبة بن نافع",
+  what:"بنى عقبة بن نافع مدينة القيروان لتكون قاعدة للجيوش. وبنى فيها مسجدًا كبيرًا.",
+  why:"صارت القيروان مركز العلم والحكم في المغرب.",tags:["القيروان","قاعدة","مسجد"]},
+ {h:78,g:698,period:"umayyad",kind:"conquest",name:"فتح قرطاج",short:"قرطاج",place:"قرطاج، تونس",lat:36.85,lon:10.32,r:7,who:"حسان بن النعمان",
+  what:"دخل حسان بن النعمان مدينة قرطاج بعد حصار، وأنهى حكم الروم في إفريقية.",
+  why:"بنى حسان بعدها مدينة تونس وميناءً لصناعة السفن.",tags:["قرطاج","حصار","ميناء"]},
+ {h:89,g:708,period:"umayyad",kind:"conquest",name:"فتح طنجة",short:"طنجة",place:"طنجة، المغرب",lat:35.77,lon:-5.8,r:6,who:"موسى بن نصير",
+  what:"أكمل موسى بن نصير فتح المغرب، وجعل طارق بن زياد واليًا على طنجة.",
+  why:"صارت طنجة نقطة الانطلاق نحو الأندلس.",tags:["المغرب","طنجة","مضيق"]},
+ {h:92,g:711,period:"umayyad",kind:"conquest",name:"فتح الأندلس",short:"الأندلس",place:"جبل طارق، جنوب إسبانيا",lat:36.14,lon:-5.35,r:8,who:"طارق بن زياد",
+  what:"عبر طارق بن زياد البحر بجيش صغير، ونزل عند جبل سُمّي باسمه. ثم انتصر في معركة وادي لكّة.",
+  why:"بدأ حكم المسلمين في الأندلس، ودام قرونًا طويلة.",tags:["الأندلس","جبل طارق","وادي لكّة"]},
+ {h:92,g:711,period:"umayyad",kind:"conquest",name:"فتح السند",short:"السند",place:"الديبل، قرب كراتشي (باكستان)",lat:24.78,lon:67.55,r:9,who:"محمد بن القاسم الثقفي",
+  what:"قاد محمد بن القاسم الثقفي الجيش وهو شاب صغير السن. ففتح مدينة الديبل ثم تقدّم في بلاد السند.",
+  why:"وصل الإسلام إلى جنوب آسيا.",tags:["السند","الديبل","جنوب آسيا"]},
+ {h:93,g:712,period:"umayyad",kind:"conquest",name:"فتح طليطلة",short:"طليطلة",place:"طليطلة، وسط إسبانيا",lat:39.86,lon:-4.03,r:7,who:"طارق بن زياد",
+  what:"دخل طارق بن زياد طليطلة، عاصمة القوط. وتقدّم موسى بن نصير بجيش آخر.",
+  why:"سقطت العاصمة، وانتشر الفتح في أغلب الأندلس.",tags:["طليطلة","القوط","عاصمة"]},
+ {h:93,g:712,period:"umayyad",kind:"conquest",name:"فتح سمرقند",short:"سمرقند",place:"سمرقند، أوزبكستان",lat:39.65,lon:66.96,r:10,who:"قتيبة بن مسلم الباهلي",
+  what:"فتح قتيبة بن مسلم مدينة بخارى ثم سمرقند، في بلاد ما وراء النهر (آسيا الوسطى).",
+  why:"دخل الإسلام آسيا الوسطى وطريق الحرير.",tags:["سمرقند","طريق الحرير","آسيا الوسطى"]},
+ {h:94,g:713,period:"umayyad",kind:"conquest",name:"فتح ملتان",short:"ملتان",place:"ملتان، باكستان",lat:30.2,lon:71.47,r:7,who:"محمد بن القاسم الثقفي",
+  what:"حاصر محمد بن القاسم مدينة ملتان حتى فتحها. وكانت من أكبر مدن شمال السند.",
+  why:"وصل الفتح إلى منطقة البنجاب في جنوب آسيا.",tags:["ملتان","البنجاب","حصار"]},
+ {h:96,g:715,period:"umayyad",kind:"conquest",name:"الوصول إلى كاشغر",short:"كاشغر",place:"كاشغر، غرب الصين",lat:39.47,lon:75.99,r:6,who:"قتيبة بن مسلم الباهلي",
+  what:"تقدّم قتيبة بن مسلم شرقًا حتى وصل إلى كاشغر على حدود الصين.",
+  why:"كانت من أبعد النقاط التي وصل إليها المسلمون في الشرق.",tags:["الصين","أقصى الشرق","كاشغر"]},
+ {h:102,g:720,period:"umayyad",kind:"conquest",name:"فتح أربونة",short:"أربونة",place:"أربونة (ناربون)، جنوب فرنسا",lat:43.18,lon:3.0,r:5,who:"السمح بن مالك الخولاني",
+  what:"عبر المسلمون جبال البرانس من الأندلس إلى جنوب فرنسا. وفتحوا مدينة أربونة، وجعلوها قاعدة لهم.",
+  why:"بدأ التقدم الإسلامي نحو بلاد الغال (فرنسا).",tags:["أربونة","جبال البرانس","فرنسا"]},
+ {h:114,g:732,period:"umayyad",kind:"battle",name:"معركة بلاط الشهداء",short:"بلاط الشهداء",place:"بين مدينتي تور وبواتييه (فرنسا)",lat:46.75,lon:0.55,r:5,who:"عبد الرحمن الغافقي",
+  what:"تقدّم المسلمون من الأندلس إلى جنوب فرنسا. والتقوا بجيش الفرنجة، فاستُشهد القائد وانسحب الجيش.",
+  why:"كانت أبعد نقطة وصل إليها المسلمون في غرب أوروبا، وبعدها توقّف التقدم شمالًا.",tags:["فرنسا","الفرنجة","أقصى الغرب"]}
+];
+var N=EV.length;
+var nf=new Intl.NumberFormat("ar-EG",{useGrouping:false});
+function ar(n){return nf.format(n);}
+function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+
+/* ---------- قناع اليابسة ---------- */
+var MASK_W=720,MASK_H=360;
+var MASK_B64="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+//8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P////8HAAAA8P//////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+//////8HAAA+/P///z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7//////wf4////////////D/AfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD//////wf8////////////+/9/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/sP/////f/D///////////////8BAAAAAAAAAAAAAAAAAADgPQAAAAAAAAAAAAD+DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA//8B/P//D/7//////////////wcAAAAAAAAAAPj/HwAAAADgAwAAAAAAAAAAAAD/PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA///7////AOD//////////////wcAAAAAAADAxw//HwAAAAAAAAAAAAAAAAAAAAD8/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAAA4P/P//8AAPz//////////////wMAAAAAAADA//8AAAAAAAAAAAAAAAAAAAAAAADw/zgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHgH948P/8//8A+P///////////////wEAAAAAAACA//8AAAAAAAAAAAAAAAAAAAAAAAAAAP4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj4AQ78///A/////////////////wEAAAAAAAAA/j88AAAAAAAAAAAAAAAAAAAAAAAAAP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAPAACADwDn/w8A/v///////////////wEAAAAAAAAA4A/8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfwAAAAAAAAD//wEA4P///////////////wMAAAAAAAAA8AcAAAAAAAAAAAAAAAAAAAAAAAAAAPAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgfwAgAADA/+H//w8A+P//////////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAPABAAAAAAAAAPw/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4Ax/wAPgf4AMAwAAAwP//////////////fwAAAAAAAAAAAAAAAAAAAAAAAAAA/P8AAAAAAAAA8P///wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP/hD/gfwB8ADgAAAAAA/v///////////wEAAAAAAAAAAAAAAAAAAAAAAADg/wEAAAAAAAD+/////w8AAAAAAPj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P//D8CPj////wAAAAAA+P///////////wEAAAAAAAAAAAAAAAAAAAAAAAD+BwAAAAAAAP7//////wcAAAAAAPz/8wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAHAAAAD/7//wAAAAAA4P///////////wAAAAAAAAAAAAAAAAAAAAAAAAD/AAAAAAAA4P//////fwAAAAAAAOAAAA4AAAAAAAAAAAAAAAAAAAAAAAAAAMD/AAAAAAAAAAAAAAAAAAAAwP//////////PwAAAAAAAAAAAAAAAAAAAAAAAMAfAAAAAAAA4P//////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAAAIAA/gcIgAAAAAAAAP//////////fwAAAAAAAAAAAAAAAAAAAAAAAPgHAAAAAAD4/////////wMAAAAAAAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID/fwIAeOAf/8HHnz8AAAAAAP7/////////AQAAAAAAAAAAAAAAAAAAAAAAAPgDAAAAAAD+//////////8/wP8AAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD/5/cYH7g/P/DvfwAAAAAAAPz/////////BwAAAAAAAAAAAAAAAAAAAAAAAP4AAAD8YQD+//////////////8DAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD/+f9/P+B/DvD/f/4BAAAAAPz///////9/AAAAAAAAAAAAAAAAAAAAAAAAAH4AAAD8Q/j8//////////////8DAID//wMAAAAAAAAAAAAAAAAAAAAAAAAAAOB//P9/PwB/DvD///8PAAAAAP7/////////BwAAAAAAAAAAAAAAAAAAAAAAgH8AAAD/cP////////////////8DAYD//w8AAAAAAAAAHwAAAADAAAAAAAAAAAA+gP//fwCAP/D/////AQAAAMD/////////////////////////////////AfwBAMD/+P7///////////////+H/////38AAAAAAAAAAAAAAAD+9wAAAAAAAAAA8P///wGA/+D/////DwAAADj///////8/DwAAAAAAAAAAAAAA/w8AAAAAAPAHAOD/8f//////////////////////////PwAAAAAAAAAAAPD///8AAAAAAAMAAOD//w+A/wH8/////wAAAPj///////8HAAAAAAAAAAAAAADA/x8AAAAAAAAAAMD/8////////////////////////////wAAAAAAAAAAAPz/////HwAA/0ccwP///z88fgDgIeD//wEAAPj9////////AQAAAAAAAAAAAMD//78BAAAAAAAABsD/+f//////////////////////////fwAA8P8BAAAAAP7//////wf/////A/3//wf++AfgH4D//wMAAAD8//////8/AAAAAAAAAAAAAPD///8fAAAAAMD/AfwADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHgAA/v///////////////////////////////////////////////////////////////wMAAAAA+P///+ffA+ADPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA4P//////////////////////////////////////////////////////////////fwAAAAAAwP/wPzgAAAABGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP//////////////////////////////////////////////////////////////HwAAAAAAAP7AAwAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz/////////////////////////////////////////////////////////////DwAAAAAAAPz4AAAAAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT+////////////////////////////////////////////////////////////BwAAAAAAAPwxAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4////////////////////////////////////////////////////////////AwAAAADwA4cAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwD4////////////////////////////////////////////////////////////AADgAQDA/wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/oD///////////////////////////////////////////////////////////9/AAD4BwDA/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwA+N/////////////////////////xB/j//w8AAAD//38AAAAA/v8HAAAAAADA//8H/v8/Hv7///////////////////////////////////////////9/AAAAAMD////////////////////////4HxDg/z8AAAD//38AAAAA8P8BAAAAAADw//+D//9//P////////////////////////////////////////////8PAAAAAMD//////////////////////wf8+AAA/z8AAAD+/z8AAAAAwB8AAAAAAAD8///g//////////////////////////////////////////////////8fAAB4APj//////////////////////wcgAAAA/3wAAAD8/x8AAAAAAAAAAAAAAAD//z/4//////////////////////////////////////////////////8/AAAAwP///////////////////////wAADgAA+CMAAAD4/wcAAAAAAAAAAAAAAOD//w/8//////////////////////////////////////////////////9/AAAA4P//////////////////////PwAAA/EZgAcAAADw/wcAAAAAAAAAAAAAAPj//wf4/////////////////////////////////////////////z/+//8BAAAA8P//////////////////////HwAAAPH/AAAAAADg/wcAAAAAAAAAAAAAAPz//wf4////////////////////////////////////////////vx///x8AAAAA4P//////////////////////DwAAAPD/AQAAAADA/wMAAAAAAAAAAAAAAPz//wP4////////////////////////////////////////////gY///wMAAAAA4P////74////////////////BwAAAPD/HwAAAAAA8AMAAAAAAAAAAAAAAPz//wf4//////////////////////////////////////////9/AMH/fwAAAAAAnP//f/7A////////////////BwAAAOD/HwAAAAAAwAEAAAAAAAAAAAAAAPz//x/gB/7///////////////////////////////////////8/APj/GAAAAAAAAPD/Px8AwP//////////////BwAAAOD/H+AAAAAAAAAAAAAAAAAAAAAAAPj//x8AAP7///////////////////////////////////////8PAHwCAAAAAAAAAPD/DwIAAP7/////////////BwAAAPD/H/ABAAAAAAAAAAAAAAAAAAAAAPjv/w+A////////////////////////////////////////wYM/AD8AAAAAAAAAADDeHwAAAPj/////////////PwAAAPj/f/ADAAAAAAAAAAAAAAAAAAAAAPjD/wOA//////////////////////////////////////8HAAAAgB8AAAAAAAAAAADgDwAAAMD/////////////PwAAAOD///8HAAAAAAAAAAAAAAAAAOABAOCA/wEA/v////////////////////////////////////8DAAAA4A8AAAAAAAAAAADgcQAAAADw////////////fwAAAMD///8PAAAAAAAAAAAAAAAAAPAAAACA/wEA/v////////////////////////////////////8AAAAA/B8AAAAAAAAAAAB4OAAAAADg////////////fwQAAID///8fAAAAAAAAAAAAAAAAAPAPAAAY/wE4/////////////////////////////////////z8AAAAA/j8AAAAAAAAAAAAeAAAAAADA/////////////z8AAID///8fAAAAAAAAAAAAAAAAAPAHAAAf/gH8/////////////////////////////////////x8AAAAA/z8AAAAAAAAAAIAHAAAAAAAA//////////////8BAMD///8fAAAAAAAAAAAAAAAAAOADAAA//gD8/////////////////////////////////////wcAAACA/z8AAAAAAAAAAPADAAAAAAAA//////////////8PAMD///9/AAAAAAAAAAAAAAAAAOAPAADPHQD8/////////////////////////////////////wMAAACA/w8AAAAAAAAAABwAAAAAAAAA/v//////////////AfD/////AQAAAAAAAAAAAAAAAMAfAACOAQD4/////////////////////////////////////wAAAACA/wcAAAAAAAAAgAMAAAAAAAAA+P//////////////B/7/////HwAAAAAAAAAAAAAAAI8/AAAOAAz/////////////////////////////////////PwAAAACA/w8AAAAAAAAAAAAAAAAAAAAA+P//////////////B/7/////PwAAAAAAAAAAAAAAwA98AAA+g////////////////////////////////////////wMAAACA/wEAAAAAAAAAAAAAAAAAAADA4P//////////////B/z/////PwAAAAAAAAAAAAAA4A/8AAD+//////////////////////////////////////////8hAAAA/wAAAAAAAAAAAAAAAAAAAADAwP//////////////D/z//////wAAAAAAAAAAAAAA4I//APz///////////////////////////////////////////87AAAA/wAAAAAAAAAAAAAAAAAAAACAwP//////////////D/j//////wEAAAAAAAAAAAAA4If/B/7///////////////////////////////////////////9/AAAAHwAAAAAAAAAAAAAAAAAAAAAAAP//////////////H/z//////wEAAAAAAAAAAAAA4IP/B/////////////////////////////////////////////8/AAAAHgAAAAAAAAAAAAAAAAAAAAAAAP//////////////P/z/////fwAAAAAAAAAAAAAAYMD/A/////////////////////////////////////////////87AAAADgAAAAAAAAAAAAAAAAAAAAAAAP7/////////////////////zwEAAAAAAAAAAAAAAAD/x/////////////////////////////////////////////9xAAAAAgAAAAAAAAAAAAAAAAAAAAAAAPz/////////////////////4QAAAAAAAAAAAAAAAMA/+P////////////////////////////////////////////9xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///////////////////w/+YAAAAAAAAAAAAAAAAGAB+P/////////////////////////////////////////////xAAAAAAAAAAAAAAAAAAAAAAAAAAAAALz//////////////////4MD8AEAAAAAAAAAAAAAAAAA///////////////////////////////////////////////xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHD+/////////////////wAM+B8AAAAAAAAAAAAAAADw//////////////////////////////////////////////+xAQAAAAAAAAAAAAAAAAAAAAAAAAAAAOD5////////////////P/4A/B8AAAAAAAAAAAAAAADn//////////////////////////////////////////////8wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID4////////////////nz8A/D8AAAAAAAAAAAAAAID///////////////////////////////////////////////8QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID7////////////////7z8A/j8AAAAAAAAAAAAAAAD+/////////////////////////////////////////////38QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////9z8AADIAAAAAAAAAAAAAAAD4/////////////////////////////////////////////z8wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////8AADAAAAAAAAAAAAAAAADw////////////8///H/z//////////////////////////x9wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//////////////////39OAAAAAAAAAAAAAAAAAADg/////////x8+8P//A/z//////////////////////////w8QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////////AAAAAAAAAAAAAAAAAADA/////////w84+P//Afz//////////////////////////wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//////////////////48/AAAAAAAAAAAAAAAAAADg////+f///wf+//9/gP///////////////////////////wMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//////////////////+MDAAAAAAAAAAAAAAAAAADg////wf///wM4+P8/gP///////////////////////////wE4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////f3AAAAAAAAAAAAAAAAAAAADg///9wf///wEA4P8/4P///////////////////////////wB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////DzAAAAAAAAAAAAAAAAAAAADg///gg////wEAgP9/wP//////////////////////////fwD4BwAAAAAAAAAAAAAAAAAAAAAAAAAAAID/////////////////BwAAAAAAAAAAAAAAAAAAwP///xjgB/z//wAAAP9/gP//////////////////////////HgD+BwAAAAAAAAAAAAAAAAAAAAAAAAAAAID/////////////////AwAAAAAAAAAAAAAAAAAAwP//PwDkD/D//wAAAPh/AP7///////////////////////9/AAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAID/////////////////AwAAAAAAAAAAAAAAAAAAwP//PwCGH8D//wAAAPj/AP7///////////////////////8/AABnAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////DwAAAAAAAAAAAAAAAAAAwP//PwAG/4D//wD+APj/AfL///////////////////////8PAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////9/AAAAAAAAAAAAAAAAAAAAwP//DwAA/IH//4P/A/z/A+D///////////////////////8HAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID///////////////8/AAAAAAAAAAAAAAAAAAAAwP//AQAH8If/cPz/////B/T/////////////////////8/8HAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID///////////////8PAAAAAAAAAAAAAAAAAAAAwP//AAAOwJHfwf//////H/z/////////////////////8P8BAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8PAAAAAAAAAAAAAAAAAAAAwP//AAAGgAE/4P//////B/j///////////////////9/eH4AAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8FAAAAAAAAAAAAAAAAAAAA4P//AAAGAAN+4P//////B/z///////////////////8/GHgAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+//////////////8DAAAAAAAAAAAAAAAAAAAA4P//AAAAAAE+4P//////A/D///////////////////8HAPwAAIAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/////////////38DAAAAAAAAAAAAAAAAAAAAwP9/AAAAgAH84P//////A/D///////////////////8PAPwBAIADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/////////////38BAAAAAAAAAAAAAAAAAAAAwP9/AAAAfgC4wP//////A/D///////////////////8/AvADAOADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/////////////38AAAAAAAAAAAAAAAAAAAAAwP8fAAAMeAA4gP//////H/D///////////////////9/H+AHAPIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//////////////8AAAAAAAAAAAAAAAAAAAAAAPgPwPs/AAAwgP/f//////7/////////////////////B/AHAP4DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//////////////8AAAAAAAAAAAAAAAAAAAAAADAA/v8fAAAAABgO////////////////////////////A+AHAP8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg//////////////8AAAAAAAAAAAAAAAAAAAAAADDA//8/AAAAAAAA////////////////////////////AOAHAP8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA//////////////8AAAAAAAAAAAAAAAAAAAAAAPDz//8/AACAHwAM//////////////////////////9/AOAD/v8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA/////////////38AAAAAAAAAAAAAAAAAAAAAAPj///8fAAAAAAAG//////////////////////////9/AOAA/z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v///////////x8AAAAAAAAAAAAAAAAAAAAAAPz///8PAAAAAACA////////////////////////////AQDA0wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P///////////wcAAAAAAAAAAAAAAAAAAAAAAP7///8/AAAAAACA////////////////////////////AQAgngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P///////////wMAAAAAAAAAAAAAAAAAAAAAgP////8/AAAAAADA////////////////////////////AQD4BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP///////////wAAAAAAAAAAAAAAAAAAAAAAwP//////BwAMAADA////////////////////////////AwD4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////fwAAAAAAAAAAAAAAAAAAAAAA4P//////fwA/AADA////////////////////////////BwBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwPv/////////PwAAAAAAAAAAAAAAAAAAAAAA4P//////fwD/AwDg////////////////////////////DwBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgOP/////////HwAAAAAAAAAAAAAAAAAAAAAA8P///////wH/f/Dg////////////////////////////DwAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMf/////////HwAAAAAAAAAAAAAAAAAAAAAA4P///////w//////////////////////////////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMf//////x/wHwAAAAAAAAAAAAAAAAAAAAAA4P//////////////////////////////////////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIb/////3x8gPgAAAAAAAAAAAAAAAAAAAAAA4P//////////////////4P//////////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIz/////AwwAPAAAAAAAAAAAAAAAAAAAAAAA8P/////////////f////4P//////////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABj/////AQAAfAAAAAAAAAAAAAAAAAAAAAAA/P/////////////d////wf//////////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADD+//9/AAAAeAAAAAAAAAAAAAAAAAAAAAAA/v/////////////7////gf//////////////////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHz4//8/AAAAfAAAAAAAAAAAAAAAAAAAAADA//////////////+H////A///////////////////////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHj4//8fAAAA+AAAAAAAAAAAAAAAAAAAAADg//////////////+H////B/z/////////////////////AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAODx//8fAAAA+AwAAAAAAAAAAAAAAAAAAADg//////////////8P////D3j8////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDh//8fAAAA8CAAAAAAAAAAAAAAAAAAAAD4//////////////8P/v//DwD9////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADh//8/AAAA4AAAAAAAAAAAAAAAAAAAAAD4//////////////8f/v//TwD5//////////////////9/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACD//8fAAAAQAAAAAAAAAAAAAAAAAAAAAD8//////////////8f/P//X8AB/uH///////////////8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH//8fAAAAABgAAAAAAAAAAAAAAAAAAAD8//////////////8//P//f+ABAMD///////////////8/DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO/v8fAAAAABAAAAAAAAAAAAAAAAAAAAD+//////////////9/+P////ADAID///////////////8PBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY/P8fAAAAABAAAAAAAAAAAAAAAAAAAAD///////////////9/4P////8PAAD///////////////8HBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ+P8PAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////9/4P////8/AAD8//////////////8BBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P8PAAAA/wEAAAAAAAAAAAAAAAAAAID/////////////////wP////9/AAD4/////5///////38AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P8PAACA8Q8AAAAAAAAAAAAAAAAAAID/////////////////wf//////AAD4/////x///////wcAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P8fAAAAAB8AAAAAAAAAAAAAAAAAAMD/////////////////w/////9/AAD4/////wP//////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P8fAOADAHgAAAAAAAAAAAAAAAAAAMD/////////////////w/////8/AADw////PwD///9/EAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA4P8/APgDAPABAAAAAAAAAAAAAAAAAMD/////////////////g/////8fAAAA/P//PwD+//8/GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P8/APgBAOAPAAAAAAAAAAAAAAAAAID/////////////////A/////8PAAAA/P//HwD+//8fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAA4P9/APgBAADgBgAAAAAAAAAAAAAAAID/////////////////A/7///8HAAAA/P//BwD4//8PPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAwP//APwBAADAPwAAAAAAAAAAAAAAAID/////////////////B/z///8PAAAA/P//AwD4//8HHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Af8BAACAfwAAAAAAAAAAAAAAAAD/////////////////B/z///8DAAAA/P//AQDw//8PHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7/9/8AAHj4SxwAAAAAAAAAAAAAAAD/////////////////D/j///8BAAAA/P//AADg//8PAAAAHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD///8AACAAAAAAAAAAAAAAAAAAAAD/////////////////H/D//38AAAAA/P9/AADg//8fAAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD//38AAAAAAAAAAAAAAAAAAAAAAID/////////////////P+D//38AAAAA+P8fAADg//8/AAAAHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//38AAAAAAAAAAAAAAAAAAAAAAID/////////////////P+D//wcAAAAA+P8PAADg+/9/AAAAHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/38AAAAAAAAAAAAAAAAAAAAAAID/////////////////P8D//wEAAAAA+P8HAADw+P//AAAADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA4H//AAAAAAAAAAAAAAAAAAAAAID/////////////////f+D//wAAAAAA+P8BAABA+P//AQAABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//AQAAAAAAAAAAAAAAAAAAAMD//////////////////8D/fwAAAAAA8P8AAAAA+P//AwAABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP//AQAAAAAAAAAAAAAAAAAAAOD//////////////////8P/BwAAAAAA4P8AAAAA8P//AwAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AwAAAAAAAAAAAAAAAAAAAMD//////////////////8f/AwAAAAAA4P8AAAAA8P//AwAALgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD/AQAAAAAAAAAAAAAAAAAAAMD//////////////////49/AAAAAAAA4P8AAAAA8P//BwAA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD+AQAAAAAAAAAAAAAAAAAAAMD//////////////////98HAAAAAAAAwP8BAAAA4Pz/BwAAxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AQAAAAAAAAAAAAAAAAAAAMD//////////////////78DAAAAAAAAwP8AAAAA4Pz/BwAAhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8AQAAAQAAAAAAAAAAAAAAAID//////////////////38AAAAAAAAAwP8AAAAA4OD/AwAABAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4AQCAGQAAAAAAAAAAAAAAAID//////////////////z8AIAAAAAAAgP8AAAAA4MD/AwAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAADweAAAAAAAAAAAAAAAAAD+/////////////////38APwAAAAAAAP8AAAAAYMD/AQAAMAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAQD+/wAgAAAAAAAAAAAAAAD8///////////////////wPwAAAAAAAP8AAAAAYID/AABA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAQD+/p83AAAAAAAAAAAAAAD4////////////////////PwAAAAAAAH8AAAAAYAA+AABAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgBwD+/P8fAAAAAAAAAAAAAADw////////////////////HwAAAAAAAD4AAAAAIAAcAAAgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw///P8/AAAAAAAAAAAAAADg////////////////////HwAAAAAAAD4DAAAAIAAMAAAQAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/pn///9/AAAAAAAAAAAAAADA////////////////////HwAAAAAAAA4DAAAA8AAEAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAePD/////AQAAAAAAAAAAAADA////////////////////DwAAAAAAAIgHAAAA8AEAAAAAwB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Pj/////AwAAAAAAAAAAAADA////////////////////DwAAAAAAAAAHAAAAwAEAAAAA8B8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQPD/////BwAAAAAAAAAAAACA////////////////////BwAAAAAAAAAHAAAAgAEAAAAAEB8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD/////DwAAAAAAAAAAAAAA/v//////////////////BwAAAAAAAAAHAAAAAAcAAAAGABcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD/////HwAAAAAAAAAAAAAA/P//H/7/////////////AwAAAAAAAAAHAAAAAA8AAAAGAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD//////w8AAAAAAAAAAAAA8P//Afz/////////////AwAAAAAAAAAAAAAAAB4AAAAfAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD//////38AAAAAAAAAAAAA4P9/APz/////////////AQAAAAAAAAAAAACABz8AAMA/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD///////8AAAAAAAAAAAAAwAcAAPj/////////////AAAAAAAAAAAAAACAD34AAOAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD///////8BAAAAAAAAAAAAAAAAAAD8////////////AAAAAAAAAAAAAAAAH34AAPAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD///////8DAAAAAAAAAAAAAAAAAAD4//////////9/AAAAAAAAAAAAAAAAPnwAAPgHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD///////8DAAAAAAAAAAAAAAAAAAD4//////////8/AAAAAAAAAAAAAAAAfHgAAPwHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD///////8DAAAAAAAAAAAAAAAAAAD4//////////8fAAAAAAAAAAAAAAAA+HgAgP8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj///////8HAAAAAAAAAAAAAAAAAAD4//////////8PAAAAAAAAAAAAAAAA8PEAgP8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj///////8PAAAAAAAAAAAAAAAAAAD4//////////8DAAAAAAAAAAAAAAAA4M8AyP8PAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz///////8PAAAAAAAAAAAAAAAAAAD4//////////8BAAAAAAAAAAAAAAAAwJ8A/P8fAIIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////////8PAAAAAAAAAAAAAAAAAAD4/////////38AAAAAAAAAAAAAAAAAwD8A/P8P/4EBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////////8HAAAAAAAAAAAAAAAAAAD4/////////z8AAAAAAAAAAAAAAAAAwH8A/P8HAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP////////9/AAAAAAAAAAAAAAAAAAD8/////////x8AAAAAAAAAAAAAAAAAgH8A/P+HAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP////////9/AwAAAAAAAAAAAAAAAAD8/////////w8AAAAAAAAAAAAAAAAAAH8A+P+HYQCBDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////HwAAAAAAAAAAAAAAAAD8/////////w8AAAAAAAAAAAAAAAAAAP4B+P+DHwDADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////fwAAAAAAAAAAAAAAAAD8/////////wcAAAAAAAAAAAAAAAAAAP4B8P+BDwAADxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////fwAAAAAAAAAAAAAAAAD4/////////wMAAAAAAAAAAAAAAAAAAPwD8P/BDwAAGH4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///////////w8AAAAAAAAAAAAAAADw/////////wAAAAAAAAAAAAAAAAAAAPgP8P/BDQAAH/8HAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////////////8BAAAAAAAAAAAAAADg/////////wAAAAAAAAAAAAAAAAAAAPAPAPvBHTAf/v8fAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP////////////8HAAAAAAAAAAAAAADA/////////wAAAAAAAAAAAAAAAAAAAOAPAOCAHSAg9P//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP////////////8PAAAAAAAAAAAAAACA////////fwAAAAAAAAAAAAAAAAAAAOAPAACAOQAAwP//A4ADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P////////////8fAAAAAAAAAAAAAACA////////PwAAAAAAAAAAAAAAAAAAAIAPAACAKQAAAP7/B4ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////////AQAAAAAAAAAAAAAA////////PwAAAAAAAAAAAAAAAAAAAAAPAACAIQAAAPj/D8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////////AwAAAAAAAAAAAAAA////////PwAAAAAAAAAAAAAAAAAAAAAOAAAAAAAAAPD/H34gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////////AwAAAAAAAAAAAAAA////////PwAAAAAAAAAAAAAAAAAAAADwAAAAAAAAEOD/fxhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP//////////////AwAAAAAAAAAAAAAA/v//////fwAAAAAAAAAAAAAAAAAAAAD44QAAAAAAEOD/PwCAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7/////////////AwAAAAAAAAAAAAAA/P//////fwAAAAAAAAAAAAAAAAAAAADg/wMAAAAAAOD/PwAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7/////////////AwAAAAAAAAAAAAAA/P//////PwAAAAAAAAAAAAAAAAAAAAAA+R8AAAAAAPD/fQAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz/////////////AwAAAAAAAAAAAAAA/P//////PwAAAAAAAAAAAAAAAAAAAAAAgH8AIAAAADh/8AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz/////////////AwAAAAAAAAAAAAAA/P//////fwAAAAAAAAAAAAAAAAAAAAAAAAA8DzwAAAB+4AEAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj/////////////AQAAAAAAAAAAAAAA/P//////fwAAAAAAAAAAAAAAAAAAAAAAAAAAAAcAAAAgwAcAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj/////////////AQAAAAAAAAAAAAAA/P///////wAAAAAAAAAAAAAAAAAAAAAAAACAgQMAAAAAgA8AAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD/////////////AAAAAAAAAAAAAAAA+P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD///////////8/AAAAAAAAAAAAAAAA+P///////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD///////////8/AAAAAAAAAAAAAAAA+P///////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD///////////8fAAAAAAAAAAAAAAAA+P///////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD///////////8PAAAAAAAAAAAAAAAA+P///////wEABAAAAAAAAAAAAAAAAAAAAAAAAABA/wMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD///////////8PAAAAAAAAAAAAAAAA/P///////wEABAAAAAAAAAAAAAAAAAAAAAAAAADg/wNwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID///////////8HAAAAAAAAAAAAAAAA/v///////wEADgAAAAAAAAAAAAAAAAAAAAAAAADg/wF4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID///////////8DAAAAAAAAAAAAAAAA/v///////wEADgAAAAAAAAAAAAAAAAAAAAAAAADw/wB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////8DAAAAAAAAAAAAAAAA/////////wEADwAAAAAAAAAAAAAAAAAAAAAAAPj4/wD4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////8DAAAAAAAAAAAAAAAA/////////wOADwAAAAAAAAAAAAAAAAAAAAAAAPz4fwD4AwAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+//////////8DAAAAAAAAAAAAAAAA/////////wHAHwAAAAAAAAAAAAAAAAAAAAAAAP7//wD4BwAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4//////////8DAAAAAAAAAAAAAAAA/////////wHgFwAAAAAAAAAAAAAAAAAAAAAAAP7//wP4BwAAAAAAAAAA/////////////////////////////////////////////////////////////////////////wD+DwAAAAAAAAAAAAAAAAAAAAAAgP7//wf4BwAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA//////////8DAAAAAAAAAAAAAACA////////fwD+DwAAAAAAAAAAAAAAAAD///////////////////////8fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////////8DAAAAAAAAAAAAAACA////////DwD/BwAAAAAAAAAAAAAAAAAAAAAA4P///z/8DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////////8DAAAAAAAAAAAAAAAA////////AwD/BwAAAAAAAAAAAAAAAAAAAAAA4P//////DwAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P////////8BAAAAAAAAAAAAAAAA////////AQD/BwAAAAAAAAAAAAAAAAAAAAAA8P//////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P////////8BAAAAAAAAAAAAAAAA/v//////AAD/AwAAAAAAAAAAAAAAAAAAAAAA+P//////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P////////8BAAAAAAAAAAAAAAAA/v////9/AAD+AwAAAAAAAAAAAAAAAAAAAAAA+P//////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P////////8AAAAAAAAAAAAAAAAA/P////8/AAD+AwAAAAAAAAAAAAAAAAAAAAAA/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P///////38AAAAAAAAAAAAAAAAA/P////8fAAD+AQAAAAAAAAAAAAAAAAAAAADA/////////wEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P///////38AAAAAAAAAAAAAAAAA+P////8/AAD/AQAAAAAAAAAAAAAAAAAAAAD+/////////wMAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P///////z8AAAAAAAAAAAAAAAAA+P////8/AID/AQAAAAAAAAAAAAAAAAAAAID//////////wcAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P///////z8AAAAAAAAAAAAAAAAA8P////9/AID/AAAAAAAAAAAAAAAAAAAAAMD//////////wcAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P///////x8AAAAAAAAAAAAAAAAA4P////9/AID/AAAAAAAAAAAAAAAAAAAAAOD//////////wcAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P///////w8AAAAAAAAAAAAAAAAA4P////9/AID/AAAAAAAAAAAAAAAAAAAAAPD//////////z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P///////wAAAAAAAAAAAAAAAAAA4P////9/AIB/AAAAAAAAAAAAAAAAAAAAAPD//////////z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//////HwAAAAAAAAAAAAAAAAAA4P////9/AIB/AAAAAAAAAAAAAAAAAAAAAPj//////////z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//////BwAAAAAAAAAAAAAAAAAA4P////9/AIB/AAAAAAAAAAAAAAAAAAAAAPj///////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//////AQAAAAAAAAAAAAAAAAAA4P////8fAAA/AAAAAAAAAAAAAAAAAAAAAPj///////////8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//////AAAAAAAAAAAAAAAAAAAA4P////8HAAAOAAAAAAAAAAAAAAAAAAAAAPD///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P////9/AAAAAAAAAAAAAAAAAAAAwP////8BAAAAAAAAAAAAAAAAAAAAAAAAAPD///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P////9/AAAAAAAAAAAAAAAAAAAAwP////8DAAAAAAAAAAAAAAAAAAAAAAAAAPj///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P////9/AAAAAAAAAAAAAAAAAAAAwP////8DAAAAAAAAAAAAAAAAAAAAAAAAAPj///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P////9/AAAAAAAAAAAAAAAAAAAAgP////8BAAAAAAAAAAAAAAAAAAAAAAAAAPD///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P////9/AAAAAAAAAAAAAAAAAAAAgP////8BAAAAAAAAAAAAAAAAAAAAAAAAAPD///////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P////9/AAAAAAAAAAAAAAAAAAAAAP////8BAAAAAAAAAAAAAAAAAAAAAAAAAOD///////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////8/AAAAAAAAAAAAAAAAAAAAAP7///8AAAAAAAAAAAAAAAAAAAAAAAAAAOD///////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////8fAAAAAAAAAAAAAAAAAAAAAP7//38AAAAAAAAAAAAAAAAAAAAAAAAAAMD///////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////8PAAAAAAAAAAAAAAAAAAAAAPz//z8AAAAAAAAAAAAAAAAAAAAAAAAAAMD///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////8PAAAAAAAAAAAAAAAAAAAAAPj//x8AAAAAAAAAAAAAAAAAAAAAAAAAAMD///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////8HAAAAAAAAAAAAAAAAAAAAAPj//x8AAAAAAAAAAAAAAAAAAAAAAAAAAMD///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////8DAAAAAAAAAAAAAAAAAAAAAPD//w8AAAAAAAAAAAAAAAAAAAAAAAAAAID///////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v////8BAAAAAAAAAAAAAAAAAAAAAPD//wcAAAAAAAAAAAAAAAAAAAAAAAAAAID///8D//////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v///38AAAAAAAAAAAAAAAAAAAAAAPD//wMAAAAAAAAAAAAAAAAAAAAAAAAAAAD//y8A+P////8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v///38AAAAAAAAAAAAAAAAAAAAAAPD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAID//wMA8P////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v///z8AAAAAAAAAAAAAAAAAAAAAAPD/fwAAAAAAAAAAAAAAAAAAAAAAAAAAAID//wAA4Pf//38AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////x8AAAAAAAAAAAAAAAAAAAAAAPD/DwAAAAAAAAAAAAAAAAAAAAAAAAAAAMD//wAAwPP//38AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////9x8AAAAAAAAAAAAAAAAAAAAAAOAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMB/AAAAwPn//z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////jwcAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfAAAAgOj//z8AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD//x8AAAAAABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD//x8AAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID//w8AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//w8AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//w8AAAAAAOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/wcAAAAAAOARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4fQAAAAAAAOAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg////AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAOAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA//8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg//8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg//8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAMIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw/z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/AEAAAAAAOsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw/z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/AEAAAAAgA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQ/38BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAAAAAgA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQ//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAAAAAwAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQ/z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcAAAAAAA8AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA/z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADI/x8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/x8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/x8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+fwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8PwAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8PwDADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8fwBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwdwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQ+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABg+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA/wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/j8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8DAAAAAAAAAAAAAPgDgB8AAAAA4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP8HAAAAAAAAgAEAAP4P8P8D8P/9/wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v8fAAAAAAAg/v9//v////9/////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw////gw8AAAD8////////////////////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////8DAID//////////////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4APj///////8HAOD//////////////////////38wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnv8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8B/////////8HAPD/////////////////////////AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnv8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD/3/////////8HwP//////////////////////////fwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvv8HAAAAAAAAAAAAAAAAAAAAAMAPvv8HAPz///////////8A+P///////////////////////////wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/8PAAAAAAAAAAAAAAAAAAAAAP6f//////////////////8D/P////////////////////////////8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwf/4fAAAAAAAAAAAAAAAAAB54/P////////////////////8B////////////////////////////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAD8f/wfAAAAAAAAAAAAAAAA/P////////////////////////+A////////////////////////////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAPB/AAAAAAA4H/w/AAAAAAAAAAAAAAAA///////////////////////////3////////////////////////////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAACAAAAAAAP8/AAAAAAAAAAAAAADg////////////////////////////////////////////////////////////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAP4P4PAfgAAA/v9/AAAAAAAAAAAAAAD+////////////////////////////////////////////////////////////DwAAAAAAAAAAAAAAAAAAAGD4AwAAAPz/////73/4//8/AAAAAAAAAAAAAID/////////////////////////////////////////////////////////////AQAAAAAAAAAAAAAAAAAAAAAA/D8AAMD///////////8fAAAAAAAAAAAAAAD+//////////////////////////////////////////////////////////8/AAAAAAAAAAAAAAAAAOD///////8PAID///////////8BAAAAAAAAAAAAAID///////////////////////////////////////////////////////////8HAAAAAAAAAAAAAAAA+P///////////7///////////38AAAAAAAAAAAAAAPD///////////////////////////////////////////////////////////8BAAAAAAAAAAAAAAD4/////////////////////////wMAAAAAAAAAAAAAgP////////////////////////////////////////////////////////////8AAAAAAAAAAAAAAADw////////////////////////DwAAAAAAAAAAAAAA/////////////////////////////////////////////////////////////38AAAAAAAAAAAAAAAD//////////////////////z8AAAAAAAAAAAAAAMD//////////////////////////////////////////////////////////////38AAAAAAAAAAAA4H/j///////////////////////8BAAAAAAAAAAAAAPj///////////////////////////////////////////////////////////////8AAAAAAAAAAADw//////////////////////////8PAAAAAAAAAAAAwP////////////////////////////////////////////////////////////////8AAAAAAAAAAADg/////////////////////////z8AAAAAAADAfwAA/v////////////////////////////////////////////////////////////////8HAAAAAAAAAP4A/////////////////////////w8AAAAAAADw/wEA//////////////////////////////////////////////////////////////////8/AAAAAAAAAPgBAP///////////////////////w8AAAAAAAD4/wEA/////////////////////////////////////////////////////////////////wcAAAAAAAAAAAAAAAD+/////////////////////38AAABAAAD+/wEAAOD//////////////////////////////////////////////////////////////wMAAAAAAAAAAAAAAAD4//////////////////////8BAADgAfD/fwAAAID//////////////////////////////////////////////////////////////wEAAAAAAAAAAAAAAAD+////////////////////////A8D/AOD/AAAAAP///////////////////////////////////////////////////////////////wAAAAAAAAAAAAAA//P/////////////////////////fwAAAAAAAADg/////////////////////////////////////////////////////////////////wMAAAAAAAAAAAAA+P////////////////////////////8DAADwB/j//////////////////////////////////////////////////////////////////w8AAAAAAAAAAAAAwP////////////////////////////9/AOD//////////////////////////////////////////////////////////////////////z8AAAAAAAAAAAAAwP//////////////////////////////g/////////////////////////////////////////////////////////////////////////8HAAAAAAAAAAAA4P//////////////////////////////////////////////////////////////////////////////////////////////////////////AQAAAAAAAAAAwP//////////////////////////////////////////////////////////////////////////////////////////////////////////BwAAhOF/AAAAAPD//////////////////////////////////////////////////////////////////////////////////////////////////////////8MBAAAAwP//////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/AP8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+var bits=(function(){var b=atob(MASK_B64),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;})();
+function isLand(lon,lat){
+  var c=Math.floor((lon+180)/360*MASK_W),r=Math.floor((90-lat)/180*MASK_H);
+  if(c<0)c=0;if(c>=MASK_W)c=MASK_W-1;if(r<0)r=0;if(r>=MASK_H)r=MASK_H-1;
+  var i=r*MASK_W+c;return (bits[i>>3]>>(i&7))&1;
+}
+
+/* ---------- الألوان من متغيرات CSS ---------- */
+var root=document.documentElement;
+var cvx=document.createElement("canvas").getContext("2d");
+function cssHex(name){var v=getComputedStyle(root).getPropertyValue(name).trim()||"#888888";cvx.fillStyle="#888888";cvx.fillStyle=v;return cvx.fillStyle;}
+function cssRaw(name){return getComputedStyle(root).getPropertyValue(name).trim();}
+function hexRGB(h){return [parseInt(h.substr(1,2),16),parseInt(h.substr(3,2),16),parseInt(h.substr(5,2),16)];}
+var palette={};
+function readPalette(){
+  palette={bg:cssHex("--bg"),land:cssHex("--land"),accent:cssHex("--accent"),fg:cssHex("--fg"),fg2:cssHex("--fg2"),solid:cssHex("--glass-solid"),grid:cssRaw("--grid"),tile:cssRaw("--tile"),line:cssRaw("--glass-line")};
+  for(var k in PERIODS)palette[k]=cssHex(PERIODS[k].v);
+  palette.isLight=(root.getAttribute("data-theme")==="light")||(root.getAttribute("data-theme")!=="dark"&&window.matchMedia("(prefers-color-scheme: light)").matches);
+}
+readPalette();
+var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function $(id){return document.getElementById(id);}
+
+/* ---------- الحالة ---------- */
+var S=13;            // المسافة بين المحطات
+var D=9.5;           // بُعد الكاميرا خلف المحطة الحالية
+var P=0,cur=0,idx=0,SEG=600,playing=false,playTimer=null,touching=false,snapTimer=null,gl=false;
+var stage=$("stage"),scroller=$("scroller");
+
+/* ---------- الأسطورة ---------- */
+(function(){var h="";for(var k in PERIODS)h+='<span><i style="--c:var('+PERIODS[k].v+')"></i>'+PERIODS[k].name+'</span>';$("legend").innerHTML=h;})();
+
+/* ---------- بطاقات المحطات ---------- */
+var cards=[],cardH=[];
+(function(){
+  var host=$("cards");
+  EV.forEach(function(e,i){
+    var a=document.createElement("article");
+    a.className="sc";a.style.setProperty("--pc","var("+PERIODS[e.period].v+")");
+    a.setAttribute("aria-hidden","true");
+    a.innerHTML=
+     '<div class="sc-grid">'+
+       '<div class="yrs"><div class="g"><span class="gn">'+ar(e.g)+'</span><span class="gu">م</span></div><div class="h"><span class="hn">'+ar(e.h)+'</span><span class="hu">هـ</span></div></div>'+
+       '<div class="col-r">'+
+         '<div class="chips"><span class="period">'+PERIODS[e.period].name+'</span><span class="kind"><svg class="i"><use href="'+KINDS[e.kind].icon+'"/></svg>'+KINDS[e.kind].label+'</span></div>'+
+         '<h2>'+e.name+'</h2>'+
+         '<p class="place"><svg class="i"><use href="#i-pin"/></svg><span>'+e.place+'</span></p>'+
+         '<div class="more"><div class="more-in">'+
+           '<p class="who"><svg class="i"><use href="#i-user"/></svg><span>القائد: <strong>'+e.who+'</strong></span></p>'+
+           '<div class="blk"><h3>ماذا حدث؟</h3><p>'+e.what+'</p></div>'+
+           '<div class="blk"><h3>لماذا هو مهم؟</h3><p>'+e.why+'</p></div>'+
+           '<ul class="tags">'+e.tags.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul>'+
+         '</div></div>'+
+       '</div>'+
+     '</div>';
+    a.addEventListener("click",function(){if(i!==idx)goTo(i);});
+    host.appendChild(a);cards.push(a);cardH.push(0);
+  });
+})();
+
+/* ---------- الشريط الجانبي ---------- */
+var railBtns=[];
+(function(){
+  var ol=$("railList");
+  EV.forEach(function(e,i){
+    var li=document.createElement("li"),b=document.createElement("button");
+    b.type="button";b.style.setProperty("--pc","var("+PERIODS[e.period].v+")");
+    b.innerHTML='<span class="t"></span><span class="lb">'+ar(e.g)+' م · '+e.short+'</span>';
+    b.setAttribute("aria-label",e.name+"، سنة "+ar(e.g)+" ميلادية");
+    b.addEventListener("click",function(){goTo(i);});
+    li.appendChild(b);ol.appendChild(li);railBtns.push(b);
+  });
+})();
+
+/* ---------- الخريطة المسطّحة ---------- */
+var mini=$("mini"),mctx=mini.getContext("2d"),miniBase=null,mw=0,mh=0,mdpr=1;
+var MM={lon0:-15,lon1:90,lat0:52,lat1:12};
+function mmx(lon){return (lon-MM.lon0)/(MM.lon1-MM.lon0)*mw;}
+function mmy(lat){return (MM.lat0-lat)/(MM.lat0-MM.lat1)*mh;}
+function buildMiniBase(){
+  var cw=mini.clientWidth||250;mdpr=Math.min(window.devicePixelRatio||1,2);
+  mw=Math.round(cw*mdpr);mh=Math.round(cw/2.5*mdpr);mini.width=mw;mini.height=mh;
+  var off=document.createElement("canvas");off.width=mw;off.height=mh;var c=off.getContext("2d");
+  var bg=hexRGB(palette.bg),land=hexRGB(palette.land);
+  var img=c.createImageData(mw,mh),d=img.data;
+  for(var y=0;y<mh;y++){var lat=MM.lat0-(y+.5)/mh*(MM.lat0-MM.lat1);
+    for(var x=0;x<mw;x++){var lon=MM.lon0+(x+.5)/mw*(MM.lon1-MM.lon0),o=(y*mw+x)*4,L=isLand(lon,lat);
+      var col=L?land:bg;d[o]=col[0];d[o+1]=col[1];d[o+2]=col[2];d[o+3]=L?255:0;}}
+  c.putImageData(img,0,0);miniBase=off;
+}
+function drawMini(){
+  if(mini.offsetParent===null&&getComputedStyle(mini.parentNode).display==="none")return;
+  if(!miniBase||miniBase.width!==Math.round((mini.clientWidth||250)*mdpr)){buildMiniBase();}
+  mctx.clearRect(0,0,mw,mh);mctx.globalAlpha=.55;mctx.drawImage(miniBase,0,0);mctx.globalAlpha=1;
+  var s=mdpr;
+  mctx.lineWidth=1.4*s;mctx.globalAlpha=.5;
+  for(var i=1;i<=idx;i++){mctx.strokeStyle=palette[EV[i].period];mctx.beginPath();mctx.moveTo(mmx(EV[i-1].lon),mmy(EV[i-1].lat));mctx.lineTo(mmx(EV[i].lon),mmy(EV[i].lat));mctx.stroke();}
+  mctx.globalAlpha=1;
+  for(var j=0;j<N;j++){var e=EV[j],x=mmx(e.lon),y=mmy(e.lat);mctx.beginPath();mctx.arc(x,y,(j<=idx?3.4:2.6)*s,0,6.2832);
+    if(j<=idx){mctx.fillStyle=palette[e.period];mctx.fill();}else{mctx.globalAlpha=.6;mctx.lineWidth=1.3*s;mctx.strokeStyle=palette.fg2;mctx.stroke();mctx.globalAlpha=1;}}
+  var a=EV[idx];mctx.lineWidth=2.2*s;mctx.strokeStyle=palette.accent;mctx.beginPath();mctx.arc(mmx(a.lon),mmy(a.lat),8*s,0,6.2832);mctx.stroke();
+}
+mini.addEventListener("click",function(ev){
+  var r=mini.getBoundingClientRect(),px=(ev.clientX-r.left)/r.width*mw,py=(ev.clientY-r.top)/r.height*mh,best=-1,bd=1e9;
+  for(var i=0;i<N;i++){var dx=mmx(EV[i].lon)-px,dy=mmy(EV[i].lat)-py,d=Math.sqrt(dx*dx+dy*dy);if(d<bd){bd=d;best=i;}}
+  if(best>=0&&bd<22*mdpr)goTo(best);
+});
+
+/* ---------- المشهد ثلاثي الأبعاد ---------- */
+var renderer,scene,camera,tiles=[],threadMeshes=[],beams=[],pulse,gridMesh,dust,glowTex;
+var TW=11,TD=5.5,TX=1024,TY=512;
+function initScene(){
+  if(typeof THREE==="undefined"){stage.classList.add("nogl");return;}
+  try{renderer=new THREE.WebGLRenderer({canvas:$("gl"),antialias:true});}catch(err){stage.classList.add("nogl");return;}
+  gl=true;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(palette.bg,16,74);
+  camera=new THREE.PerspectiveCamera(46,1,0.1,120);
+
+  // خيط الرحلة
+  var gc=document.createElement("canvas");gc.width=128;gc.height=4;var gx=gc.getContext("2d");
+  var gr=gx.createLinearGradient(0,0,128,0);gr.addColorStop(0,"#000");gr.addColorStop(.5,"#fff");gr.addColorStop(1,"#000");gx.fillStyle=gr;gx.fillRect(0,0,128,4);
+  glowTex=new THREE.CanvasTexture(gc);
+  buildThread();
+
+  // أرضية شبكية
+  gridMesh=new THREE.GridHelper(N*S*2,N*S/2,0x888888,0x888888);
+  gridMesh.position.set(0,-0.02,-(N-1)*S/2);
+  gridMesh.material.transparent=true;gridMesh.material.opacity=.18;
+  scene.add(gridMesh);
+
+  // بلاطات الخرائط
+  var pg=new THREE.PlaneGeometry(TW,TD);
+  for(var i=0;i<N;i++){
+    var m=new THREE.Mesh(pg,new THREE.MeshBasicMaterial({transparent:true,depthWrite:false}));
+    m.rotation.x=-Math.PI/2;m.position.set(0,0.005,-i*S);m.visible=false;scene.add(m);
+    tiles.push({mesh:m,tex:null});
+  }
+  // أعمدة الضوء وعُقد المحطات
+  for(var j=0;j<N;j++){
+    var z=-j*S;
+    var line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,z),new THREE.Vector3(0,2.6,z)]),new THREE.LineBasicMaterial({color:palette[EV[j].period],transparent:true,opacity:.5}));
+    scene.add(line);
+    var node=new THREE.Mesh(new THREE.CircleGeometry(0.22,32),new THREE.MeshBasicMaterial({color:palette[EV[j].period]}));
+    node.rotation.x=-Math.PI/2;node.position.set(0,0.03,z);scene.add(node);
+    beams.push({line:line,node:node});
+  }
+  pulse=new THREE.Mesh(new THREE.RingGeometry(0.34,0.42,48),new THREE.MeshBasicMaterial({color:palette.accent,transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+  pulse.rotation.x=-Math.PI/2;scene.add(pulse);
+
+  // غبار عائم يعطي إحساس العمق
+  var cnt=900,pos=new Float32Array(cnt*3);
+  for(var k=0;k<cnt;k++){pos[k*3]=(Math.random()-.5)*34;pos[k*3+1]=0.2+Math.random()*9;pos[k*3+2]=10-Math.random()*(N*S+20);}
+  var dg=new THREE.BufferGeometry();dg.setAttribute("position",new THREE.BufferAttribute(pos,3));
+  var tc=document.createElement("canvas");tc.width=tc.height=32;var tx=tc.getContext("2d");tx.fillStyle="#fff";tx.beginPath();tx.arc(16,16,15,0,6.2832);tx.fill();
+  dust=new THREE.Points(dg,new THREE.PointsMaterial({size:0.07,color:palette.fg2,map:new THREE.CanvasTexture(tc),alphaTest:.4,transparent:true,opacity:.55,sizeAttenuation:true}));
+  scene.add(dust);
+
+  applySceneTheme();
+  resize();
+}
+function buildThread(){
+  threadMeshes.forEach(function(t){scene.remove(t.core);scene.remove(t.glow);t.core.geometry.dispose();t.glow.geometry.dispose();t.core.material.dispose();t.glow.material.dispose();});
+  threadMeshes=[];
+  for(var a=0;a<N-1;a++){
+    var za=-a*S,zb=-(a+1)*S,ca=new THREE.Color(palette[EV[a].period]),cb=new THREE.Color(palette[EV[a+1].period]);
+    threadMeshes.push({core:ribbon(0.06,za,zb,ca,cb,null),glow:ribbon(0.55,za,zb,ca,cb,glowTex)});
+    scene.add(threadMeshes[a].core);scene.add(threadMeshes[a].glow);
+  }
+  updateThreadProgress();
+}
+function ribbon(hw,za,zb,ca,cb,alphaMap){
+  var g=new THREE.BufferGeometry();
+  g.setAttribute("position",new THREE.BufferAttribute(new Float32Array([-hw,0.012,za,hw,0.012,za,-hw,0.012,zb,hw,0.012,zb]),3));
+  g.setAttribute("color",new THREE.BufferAttribute(new Float32Array([ca.r,ca.g,ca.b,ca.r,ca.g,ca.b,cb.r,cb.g,cb.b,cb.r,cb.g,cb.b]),3));
+  g.setAttribute("uv",new THREE.BufferAttribute(new Float32Array([0,0,1,0,0,1,1,1]),2));
+  g.setIndex([0,2,1,1,2,3]);
+  var m=new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,depthWrite:false});
+  if(alphaMap){m.alphaMap=alphaMap;}
+  return new THREE.Mesh(g,m);
+}
+function updateThreadProgress(){
+  threadMeshes.forEach(function(t,a){var past=a<idx;t.core.material.opacity=past?1:.4;t.glow.material.opacity=past?(palette.isLight?.5:.75):(palette.isLight?.18:.28);});
+}
+function applySceneTheme(){
+  if(!gl)return;
+  scene.fog.color.set(palette.bg);renderer.setClearColor(new THREE.Color(palette.bg),1);
+  gridMesh.material.color.set(palette.isLight?0x5a7d92:0x8fb4d6);
+  gridMesh.material.opacity=palette.isLight?.16:.12;
+  dust.material.color.set(palette.fg2);dust.material.opacity=palette.isLight?.45:.55;
+  pulse.material.color.set(palette.accent);
+  for(var i=0;i<N;i++){var c=palette[EV[i].period];beams[i].line.material.color.set(c);beams[i].node.material.color.set(c);}
+  buildThread();
+  tiles.forEach(function(t,i){if(t.tex)drawTile(i);});
+}
+
+/* رسم خريطة أرضية لكل محطة */
+function drawTile(i){
+  var t=tiles[i],e=EV[i];
+  if(!t.canvas){t.canvas=document.createElement("canvas");t.canvas.width=TX;t.canvas.height=TY;}
+  var c=t.canvas,x=c.getContext("2d");
+  x.clearRect(0,0,TX,TY);
+  var lonSpan=40,latSpan=20,lon0=e.lon-lonSpan/2,lat1=e.lat+latSpan/2;
+  function px(lon){return (lon-lon0)/lonSpan*TX;}
+  function py(lat){return (lat1-lat)/latSpan*TY;}
+  var pc=palette[e.period];
+  // اللوح
+  function rr(){x.beginPath();if(x.roundRect){x.roundRect(6,6,TX-12,TY-12,34);}else{x.rect(6,6,TX-12,TY-12);}}
+  rr();x.fillStyle=palette.tile;x.fill();
+  x.save();rr();x.clip();
+  // الشبكة
+  x.strokeStyle=palette.grid;x.lineWidth=1.5;x.beginPath();
+  for(var lo=Math.ceil(lon0/10)*10;lo<lon0+lonSpan;lo+=10){var gx=Math.round(px(lo))+.5;x.moveTo(gx,0);x.lineTo(gx,TY);}
+  for(var la=Math.ceil((lat1-latSpan)/10)*10;la<lat1;la+=10){var gy=Math.round(py(la))+.5;x.moveTo(0,gy);x.lineTo(TX,gy);}
+  x.stroke();
+  // الأحداث السابقة داخل الإطار
+  var near=[];
+  for(var j=0;j<=i;j++){var q=EV[j];if(Math.abs(q.lon-e.lon)<lonSpan/2+q.r+2&&Math.abs(q.lat-e.lat)<latSpan/2+q.r+2)near.push(q);}
+  // نقاط اليابسة
+  var base=hexRGB(palette.land),step=7;
+  for(var yy=step;yy<TY;yy+=step){
+    var lat=lat1-yy/TY*latSpan,cl=Math.cos(lat*Math.PI/180);
+    for(var xx=step;xx<TX;xx+=step){
+      var lon=lon0+xx/TX*lonSpan;
+      if(!isLand(lon,lat))continue;
+      var best=0,bp=null;
+      for(var n=0;n<near.length;n++){var q2=near[n],dx=(lon-q2.lon)*cl,dy=lat-q2.lat,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<q2.r){var w=1-d/q2.r;w=w*w*(3-2*w);if(w>best){best=w;bp=q2.period;}}}
+      if(bp){var pr=hexRGB(palette[bp]),m=.2+.8*best;
+        x.fillStyle="rgb("+Math.round(base[0]+(pr[0]-base[0])*m)+","+Math.round(base[1]+(pr[1]-base[1])*m)+","+Math.round(base[2]+(pr[2]-base[2])*m)+")";
+        x.beginPath();x.arc(xx,yy,2.7,0,6.2832);x.fill();}
+      else{x.fillStyle=palette.land;x.globalAlpha=.8;x.beginPath();x.arc(xx,yy,2.1,0,6.2832);x.fill();x.globalAlpha=1;}
+    }
+  }
+  // نقاط الأحداث السابقة
+  for(var k=0;k<i;k++){var q3=EV[k];if(q3.lon>lon0&&q3.lon<lon0+lonSpan&&q3.lat<lat1&&q3.lat>lat1-latSpan){
+    x.beginPath();x.arc(px(q3.lon),py(q3.lat),8,0,6.2832);x.fillStyle=palette[q3.period];x.fill();x.lineWidth=3;x.strokeStyle=palette.solid;x.stroke();}}
+  // الدبوس
+  var cx=TX/2,cy=TY/2;
+  var rg=x.createRadialGradient(cx,cy,0,cx,cy,110);rg.addColorStop(0,pc);rg.addColorStop(1,"rgba(0,0,0,0)");
+  x.globalAlpha=.42;x.fillStyle=rg;x.beginPath();x.arc(cx,cy,110,0,6.2832);x.fill();x.globalAlpha=1;
+  x.lineWidth=4;x.strokeStyle=pc;x.beginPath();x.arc(cx,cy,30,0,6.2832);x.stroke();
+  x.fillStyle=pc;x.beginPath();x.arc(cx,cy,13,0,6.2832);x.fill();
+  // اسم الموقع
+  var ff=getComputedStyle(root).getPropertyValue("--font-body");
+  x.font="600 40px "+ff;x.direction="rtl";x.textAlign="center";x.textBaseline="middle";
+  var tw=x.measureText(e.short).width+44;
+  x.fillStyle=palette.solid;x.strokeStyle=pc;x.lineWidth=3;x.beginPath();
+  if(x.roundRect){x.roundRect(cx-tw/2,cy+52,tw,62,31);}else{x.rect(cx-tw/2,cy+52,tw,62);}
+  x.fill();x.stroke();x.fillStyle=palette.fg;x.fillText(e.short,cx,cy+84);
+  // الإحداثيات (رقمان صحيحان لتفادي اختلاط اتجاه الأرقام)
+  x.font="500 26px "+ff;x.fillStyle=palette.fg2;x.textBaseline="middle";
+  x.textAlign="left";x.fillText("خط العرض "+ar(Math.round(Math.abs(e.lat)))+"° "+(e.lat>=0?"شمالًا":"جنوبًا"),cx+26,cy+156);
+  x.textAlign="right";x.fillText("خط الطول "+ar(Math.round(Math.abs(e.lon)))+"° "+(e.lon>=0?"شرقًا":"غربًا"),cx-26,cy+156);
+  x.restore();
+  rr();x.lineWidth=3;x.strokeStyle=pc;x.globalAlpha=.55;x.stroke();x.globalAlpha=1;
+  if(!t.tex){t.tex=new THREE.CanvasTexture(c);t.tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());t.mesh.material.map=t.tex;t.mesh.material.needsUpdate=true;}
+  else{t.tex.needsUpdate=true;}
+  t.mesh.visible=true;
+}
+function ensureTiles(){
+  for(var i=0;i<N;i++){
+    var d=i-cur,t=tiles[i];
+    if(d>-1.6&&d<6.4){if(!t.tex)drawTile(i);}
+    else if(t.tex&&(d<-3||d>8.4)){t.tex.dispose();t.tex=null;t.mesh.material.map=null;t.mesh.material.needsUpdate=true;t.mesh.visible=false;}
+  }
+}
+function resize(){
+  var w=stage.clientWidth||800,h=stage.clientHeight||600,asp=w/h;
+  if(gl){renderer.setSize(w,h,false);camera.aspect=asp;camera.fov=asp<0.9?62:46;camera.updateProjectionMatrix();}
+  layout();
+}
+
+/* ---------- التمرير ---------- */
+function layout(){
+  var vh=window.innerHeight;
+  SEG=Math.max(420,Math.round(vh*0.8));
+  scroller.style.height=(vh+(N-1)*SEG)+"px";
+  window.scrollTo(0,Math.round(P*SEG));
+}
+var settled=0;
+function onScroll(){
+  P=clamp((window.pageYOffset||document.documentElement.scrollTop)/SEG,0,N-1);
+  clearTimeout(snapTimer);
+  snapTimer=setTimeout(function(){
+    if(touching)return;
+    var near=Math.round(P);
+    if(Math.abs(P-near)<0.01){settled=near;return;}
+    // نية المستخدم: أي حركة صغيرة للأسفل أو للأعلى تنقله إلى المحطة المجاورة
+    var tgt=(P>settled)?Math.floor(P+0.9):Math.ceil(P-0.9);
+    tgt=clamp(tgt,0,N-1);settled=tgt;
+    window.scrollTo({top:tgt*SEG,behavior:reduce?"auto":"smooth"});
+  },170);
+  if(P>0.15)$("hint").classList.add("gone");
+}
+window.addEventListener("scroll",onScroll,{passive:true});
+window.addEventListener("touchstart",function(){touching=true;},{passive:true});
+window.addEventListener("touchend",function(){touching=false;clearTimeout(snapTimer);snapTimer=setTimeout(onScroll,170);},{passive:true});
+function goTo(i){i=clamp(i,0,N-1);window.scrollTo({top:i*SEG,behavior:reduce?"auto":"smooth"});}
+
+/* ---------- تحديث الحالة النشطة ---------- */
+function setActive(i){
+  idx=i;
+  var e=EV[i];
+  cards.forEach(function(c,k){c.classList.toggle("act",k===i);c.setAttribute("aria-hidden",k===i?"false":"true");});
+  railBtns.forEach(function(b,k){b.classList.toggle("on",k===i);b.classList.toggle("past",k<i);if(k===i)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");});
+  $("cnt").textContent=ar(i+1)+" / "+ar(N);
+  $("prevBtn").disabled=i===0;$("nextBtn").disabled=i===N-1;
+  $("live").textContent="الحدث "+ar(i+1)+" من "+ar(N)+": "+e.name+"، سنة "+ar(e.g)+" ميلادية، "+ar(e.h)+" هجرية";
+  if(gl)updateThreadProgress();
+  drawMini();
+  if(speechOn)scheduleSpeak();
+}
+
+/* ---------- وضع البطاقات: بطاقة نشطة في المقدمة وطابور خلفها ---------- */
+var tv=null,LY={T0:180,hAct:300,w:800,h:600,dock:112},viewShift=0;
+function computeLayout(){
+  var w=stage.clientWidth,h=stage.clientHeight,wide=w>=760,dock=(wide?112:104)+($("voice").classList.contains("show")?44:0),head=64;
+  var hAct=cards[idx].offsetHeight||300;
+  for(var i=0;i<N;i++){var k=i-cur;if(k>-0.85&&k<5.5)cardH[i]=cards[i].offsetHeight||cardH[i]||80;}
+  var avail=h-dock-head-hAct-10;
+  var deck=clamp(avail,34,112);
+  var T0=head+deck+8;
+  if(T0+hAct>h-dock)T0=Math.max(head+2,h-dock-hAct);
+  LY={T0:T0,hAct:hAct,w:w,h:h,dock:dock,G:deck/112*50};
+}
+function placeCards(){
+  var T0=LY.T0,w=LY.w,G=LY.G;
+  for(var i=0;i<N;i++){
+    var c=cards[i],k=i-cur;
+    if(k<-0.85||k>5.5){if(c.style.visibility!=="hidden")c.style.visibility="hidden";continue;}
+    var hh=cardH[i]||80,s,bottom,o;
+    if(k>=0){
+      s=1/(1+0.42*k);
+      bottom=T0-G*(1-Math.pow(0.62,k))/0.38+hh*s;
+      o=clamp(1.15-0.26*k,0,1);
+    }else{
+      s=1+(-k)*0.3;
+      bottom=T0+hh+(-k)*320;
+      o=clamp(1+k*2.6,0,1);
+    }
+    c.style.visibility=o<=0.01?"hidden":"visible";
+    c.style.opacity=o.toFixed(3);
+    c.style.zIndex=String(1000-Math.round(k*10));
+    c.style.transform="translate3d("+(w/2).toFixed(1)+"px,"+bottom.toFixed(1)+"px,0) translate(-50%,-100%) scale("+s.toFixed(3)+")";
+    c.style.pointerEvents=o>.3?"auto":"none";
+  }
+}
+
+/* ---------- الحلقة الرئيسية ---------- */
+var last=performance.now(),tAcc=0;
+function frame(now){
+  requestAnimationFrame(frame);
+  if(document.hidden)return;
+  var dt=Math.min(.05,(now-last)/1000);last=now;tAcc+=dt;
+  cur=reduce?P:cur+(P-cur)*(1-Math.exp(-dt*5.5));
+  if(Math.abs(P-cur)<0.0005)cur=P;
+  var ni=clamp(Math.round(cur),0,N-1);if(ni!==idx)setActive(ni);
+  $("progBar").style.width=(cur/(N-1)*100).toFixed(2)+"%";
+  computeLayout();
+  if(gl){
+    var zc=-cur*S+D,w=LY.w,h=LY.h;
+    camera.clearViewOffset();
+    camera.position.set(reduce?0:Math.sin(tAcc*.35)*.18,4.5,zc);
+    camera.lookAt(0,0.2,zc-14.2);
+    camera.updateMatrixWorld();
+    tv.set(0,0,-cur*S).project(camera);
+    var yPin=(-tv.y*.5+.5)*h;
+    var desired=clamp(LY.T0+LY.hAct+58,h*0.6,h-LY.dock-34);
+    var shift=yPin-desired;
+    viewShift=reduce?shift:viewShift+(shift-viewShift)*(1-Math.exp(-dt*6));
+    camera.setViewOffset(w,h,0,viewShift,w,h);
+    pulse.position.set(0,0.05,-idx*S);
+    var ph=(tAcc%1.8)/1.8;
+    if(reduce){pulse.scale.setScalar(1.4);pulse.material.opacity=.9;}else{pulse.scale.setScalar(1+ph*2.2);pulse.material.opacity=(1-ph)*.9;}
+    ensureTiles();
+    renderer.render(scene,camera);
+  }
+  placeCards();
+}
+
+/* ---------- التحكم ---------- */
+$("prevBtn").addEventListener("click",function(){goTo(idx-1);});
+$("nextBtn").addEventListener("click",function(){goTo(idx+1);});
+function schedule(){clearTimeout(playTimer);playTimer=setTimeout(function(){if(idx<N-1){goTo(idx+1);schedule();}else{setPlay(false);}},speechOn?60000:8000);}
+function setPlay(on){
+  playing=on;clearTimeout(playTimer);
+  $("playBtn").setAttribute("aria-pressed",on?"true":"false");
+  $("playUse").setAttribute("href",on?"#i-pause":"#i-play");
+  $("playTxt").textContent=on?"إيقاف مؤقت":"تشغيل";
+  if(on){if(idx===N-1)goTo(0);schedule();if(speechOn&&!speaking)speakNow(idx);}
+}
+$("playBtn").addEventListener("click",function(){setPlay(!playing);});
+document.addEventListener("keydown",function(e){
+  if(e.altKey||e.ctrlKey||e.metaKey)return;
+  var t=e.target&&e.target.tagName;if(t==="INPUT"||t==="TEXTAREA")return;
+  var k=e.key;
+  if(k==="ArrowDown"||k==="PageDown"||k==="ArrowLeft"){goTo(idx+1);e.preventDefault();}
+  else if(k==="ArrowUp"||k==="PageUp"||k==="ArrowRight"){goTo(idx-1);e.preventDefault();}
+  else if(k==="Home"){goTo(0);e.preventDefault();}
+  else if(k==="End"){goTo(N-1);e.preventDefault();}
+});
+function effectiveLight(){var t=root.getAttribute("data-theme");if(t)return t==="light";return window.matchMedia("(prefers-color-scheme: light)").matches;}
+function refreshTheme(){readPalette();miniBase=null;applySceneTheme();drawMini();}
+$("themeBtn").addEventListener("click",function(){root.setAttribute("data-theme",effectiveLight()?"dark":"light");});
+window.matchMedia("(prefers-color-scheme: light)").addEventListener("change",refreshTheme);
+new MutationObserver(refreshTheme).observe(root,{attributes:true,attributeFilter:["data-theme"]});
+$("textBtn").addEventListener("click",function(){var on=root.classList.toggle("big");this.setAttribute("aria-pressed",on?"true":"false");});
+window.addEventListener("resize",function(){miniBase=null;resize();drawMini();});
+if(window.ResizeObserver){new ResizeObserver(function(){resize();}).observe(stage);}
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){tiles.forEach(function(t,i){if(t.tex)drawTile(i);});drawMini();});}
+
+
+/* ---------- الأوامر الصوتية (لذوي الإعاقة الحركية) ---------- */
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+var vBtn=$("voiceBtn"),vBox=$("voice"),vTxt=$("voiceTxt");
+var voiceWant=false,rec=null,recOn=false,handled=-1,coolAt=0,lastCmd="",hitTimer=null;
+var RX={
+  next:/(^| )(التالي|التاليه|التاني|الجاي|الجايه|بعده|كمل|next)( |$)/,
+  prev:/(^| )(السابق|السابقه|قبله|ارجع|رجوع|back|previous)( |$)/,
+  play:/(^| )(تشغيل|شغل|ابدا|ابدء|play|start)( |$)/,
+  pause:/(^| )(ايقاف|وقف|قف|توقف|توقيف|stop|pause)( |$)/,
+  first:/(^| )(البدايه|من الاول|الاول|الهجره)( |$)/,
+  last:/(^| )(الاخير|النهايه|الاخيره)( |$)/,
+  read:/(^| )(اقرا|اقراها|اقرالي|كرر|اعد|اعيد|اسمعني)( |$)/,
+  mute:/(^| )(اسكت|صمت|كفايه)( |$)/
+};
+function norm(t){return String(t).replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[^\u0600-\u06FFa-z\s]/gi," ").toLowerCase().replace(/\s+/g," ").trim();}
+function matchCmd(text){
+  var t=norm(text);if(!t||t.split(" ").length>5)return null;
+  var order=["next","prev","play","pause","first","last","read","mute"];
+  for(var i=0;i<order.length;i++){if(RX[order[i]].test(t))return order[i];}
+  return null;
+}
+var CMD_LABEL={next:"التالي",prev:"السابق",play:"تشغيل",pause:"إيقاف",first:"البداية",last:"النهاية",read:"اقرأ",mute:"اسكت"};
+function runCmd(c){
+  if(c==="next")goTo(idx+1);
+  else if(c==="prev")goTo(idx-1);
+  else if(c==="play"){if(!playing)setPlay(true);}
+  else if(c==="pause"){if(playing)setPlay(false);}
+  else if(c==="first")goTo(0);
+  else if(c==="last")goTo(N-1);
+  else if(c==="read"){if(speechOn)speakNow(idx);else setSpeech(true);}
+  else if(c==="mute"){if(speechOn)setSpeech(false);}
+}
+function voiceSay(msg,kind){
+  vTxt.textContent=msg;vBox.className="voice show"+(kind?" "+kind:"");
+}
+function voiceHide(){vBox.className="voice";vTxt.textContent="";}
+function voiceUI(on){
+  vBtn.classList.toggle("on",on);vBtn.setAttribute("aria-pressed",on?"true":"false");
+  vBtn.setAttribute("aria-label",on?"إيقاف الأوامر الصوتية":"تشغيل الأوامر الصوتية");
+}
+function startRec(){
+  if(!voiceWant||recOn)return;
+  try{
+    rec=new SR();rec.lang="ar-EG";rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=3;
+  }catch(e){voiceWant=false;voiceUI(false);voiceSay("تعذّر تشغيل الميكروفون في هذه الصفحة.","warn");return;}
+  handled=-1;
+  rec.onstart=function(){recOn=true;voiceSay("أستمع إليك… قُل «التالي» أو «السابق»","live");};
+  rec.onresult=function(ev){
+    for(var i=ev.resultIndex;i<ev.results.length;i++){
+      if(i<=handled)continue;
+      var r=ev.results[i],cmd=null,heard=r[0]?r[0].transcript:"";
+      for(var a=0;a<r.length&&!cmd;a++){cmd=matchCmd(r[a].transcript);}
+      if(cmd){
+        handled=i;
+        var now=Date.now();
+        if(cmd!==lastCmd||now-coolAt>900){coolAt=now;lastCmd=cmd;runCmd(cmd);voiceSay("سمعتك: «"+CMD_LABEL[cmd]+"»","live hit");clearTimeout(hitTimer);hitTimer=setTimeout(function(){if(recOn)voiceSay("أستمع إليك… قُل «التالي» أو «السابق»","live");},1600);}
+      }else if(r.isFinal){
+        handled=i;
+        if(heard)voiceSay("سمعت: «"+heard.trim()+"». قُل «التالي» أو «السابق»","live");
+      }else if(heard){
+        voiceSay("أسمع: «"+heard.trim()+"»","live");
+      }
+    }
+  };
+  rec.onerror=function(e){
+    var c=e&&e.error;
+    if(c==="not-allowed"||c==="service-not-allowed"){
+      voiceWant=false;voiceUI(false);
+      voiceSay("الميكروفون غير متاح في هذه الصفحة. افتح النسخة المستقلة من التطبيق على رابط https واسمح بالميكروفون.","warn");
+    }else if(c==="audio-capture"){
+      voiceWant=false;voiceUI(false);voiceSay("لم أجد ميكروفونًا متصلًا بالجهاز.","warn");
+    }else if(c==="network"){
+      voiceSay("التعرّف على الصوت يحتاج اتصالًا بالإنترنت.","warn");
+    }
+  };
+  rec.onend=function(){
+    recOn=false;
+    if(voiceWant){setTimeout(startRec,350);}else{voiceUI(false);}
+  };
+  try{rec.start();}catch(e2){recOn=false;}
+}
+function setVoice(on){
+  voiceWant=on;voiceUI(on);
+  try{localStorage.setItem("fotouh-voice",on?"on":"off");}catch(e){}
+  if(on){
+    if(!SR){voiceWant=false;voiceUI(false);voiceSay("متصفحك لا يدعم الأوامر الصوتية. جرّب Chrome أو Edge.","warn");return;}
+    voiceSay("جارٍ تشغيل الميكروفون…","live");startRec();
+  }else{
+    try{if(rec)rec.abort();}catch(e){}
+    recOn=false;voiceHide();
+  }
+}
+vBtn.addEventListener("click",function(){setVoice(!voiceWant);});
+// إن سبق للمستخدم تشغيلها ومنح الإذن، نشغّلها تلقائيًا بلا حاجة للمس الشاشة
+(function(){
+  try{
+    if(!SR||localStorage.getItem("fotouh-voice")!=="on"||!navigator.permissions)return;
+    navigator.permissions.query({name:"microphone"}).then(function(r){if(r.state==="granted")setVoice(true);}).catch(function(){});
+  }catch(e){}
+})();
+
+/* ---------- القراءة الصوتية لكل شريحة ---------- */
+var TTS=window.speechSynthesis||null,speechOn=false,speakTok=0,speakTimer=null,speaking=false,arVoice=null,rateIdx=1;
+var RATES=[0.8,0.95,1.1,1.25],RATE_LABEL=["بطيئة","عادية","أسرع","سريعة"];
+var speakBtn=$("speakBtn"),rateBtn=$("rateBtn");
+function pickVoice(){
+  arVoice=null;if(!TTS)return;
+  var vs=TTS.getVoices()||[],pref=["ar-eg","ar-sa"];
+  function lg(v){return String(v.lang||"").replace("_","-").toLowerCase();}
+  for(var i=0;i<pref.length&&!arVoice;i++){for(var j=0;j<vs.length;j++){if(lg(vs[j])===pref[i]){arVoice=vs[j];break;}}}
+  if(!arVoice){for(var k=0;k<vs.length;k++){if(lg(vs[k]).indexOf("ar")===0){arVoice=vs[k];break;}}}
+}
+if(TTS){pickVoice();if(TTS.addEventListener)TTS.addEventListener("voiceschanged",pickVoice);}
+function speechText(i){
+  var e=EV[i];
+  var t=e.name+". سنة "+ar(e.g)+" ميلادية، الموافقة لسنة "+ar(e.h)+" هجرية. القائد: "+e.who+". المكان: "+e.place+". ماذا حدث؟ "+e.what+" لماذا هو مهم؟ "+e.why;
+  return t.replace(/ﷺ/g," صلى الله عليه وسلم ");
+}
+function chunks(t){
+  var parts=t.match(/[^.!؟?،]+[.!؟?،]?/g)||[t],out=[],cur="";
+  parts.forEach(function(p){if((cur+p).length<160){cur+=p;}else{if(cur)out.push(cur);cur=p;}});
+  if(cur)out.push(cur);return out;
+}
+function speakUI(){speakBtn.classList.toggle("talk",speaking);}
+function afterSpeech(){
+  if(playing&&speechOn){
+    clearTimeout(playTimer);
+    playTimer=setTimeout(function(){if(idx<N-1){goTo(idx+1);schedule();}else{setPlay(false);}},1600);
+  }
+}
+function speakNow(i){
+  if(!TTS||!speechOn)return;
+  TTS.cancel();clearTimeout(speakTimer);
+  var tok=++speakTok,list=chunks(speechText(i)),n=list.length;
+  speaking=true;speakUI();
+  list.forEach(function(txt,k){
+    var u=new SpeechSynthesisUtterance(txt);
+    u.lang=arVoice?arVoice.lang:"ar-SA";if(arVoice)u.voice=arVoice;u.rate=RATES[rateIdx];
+    var finish=function(ev){
+      if(tok!==speakTok)return;
+      if(ev&&(ev.error==="interrupted"||ev.error==="canceled"))return;
+      if(k===n-1){speaking=false;speakUI();afterSpeech();}
+    };
+    u.onend=finish;u.onerror=finish;
+    TTS.speak(u);
+  });
+}
+function scheduleSpeak(){
+  ++speakTok;if(TTS)TTS.cancel();speaking=false;speakUI();
+  clearTimeout(speakTimer);speakTimer=setTimeout(function(){speakNow(idx);},450);
+}
+function setSpeech(on){
+  if(on&&!TTS){voiceSay("متصفحك لا يدعم القراءة الصوتية.","warn");return;}
+  speechOn=on;speakBtn.classList.toggle("on",on);speakBtn.setAttribute("aria-pressed",on?"true":"false");
+  speakBtn.setAttribute("aria-label",on?"إيقاف القراءة الصوتية":"تشغيل القراءة الصوتية");
+  rateBtn.hidden=!on;
+  if(on){
+    if((TTS.getVoices()||[]).length&&!arVoice)voiceSay("جهازك ليس به صوت عربي. ثبّت صوتًا عربيًا من إعدادات النظام ليكون النطق صحيحًا.","warn");
+    speakNow(idx);
+  }else{
+    ++speakTok;clearTimeout(speakTimer);TTS.cancel();speaking=false;speakUI();
+  }
+}
+speakBtn.addEventListener("click",function(){setSpeech(!speechOn);});
+rateBtn.addEventListener("click",function(){
+  rateIdx=(rateIdx+1)%RATES.length;rateBtn.textContent="السرعة: "+RATE_LABEL[rateIdx];
+  if(speechOn)speakNow(idx);
+});
+window.addEventListener("pagehide",function(){if(TTS)TTS.cancel();});
+
+/* ---------- البدء ---------- */
+tv=(typeof THREE!=="undefined")?new THREE.Vector3():null;
+initScene();
+layout();
+setActive(0);
+requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
