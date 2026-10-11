@@ -192,7 +192,7 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
 </svg>
 
 <div class="scroller" id="scroller" dir="rtl" lang="ar" role="main" aria-label="رحلة الفتوحات الإسلامية - عرض تفاعلي">
-  <div class="sr" id="a11yWelcome" aria-live="assertive" role="alert">مرحبًا بك. هذا الموقع يدعم الأوامر الصوتية. قُل التالي أو السابق للتنقل، شغّل أو وقّف للتحكم بالعرض، اقرأ لسماع المحتوى.</div>
+  <div class="sr" id="a11yWelcome" aria-live="assertive" role="alert">مرحبًا بك في رحلة الفتوحات الإسلامية. هذا الموقع يدعم التحكم الكامل بالصوت. يمكنك التحدث في أي وقت حتى أثناء القراءة؛ قُل «وقّف» للإيقاف الفوري، أو «التالي» للانتقال للشريحة التالية، أو «السابق» للرجوع، أو «شغّل» لبدء العرض، أو «اقرأ» لسماع الشريحة.</div>
   <div class="stage" id="stage">
     <canvas id="gl" aria-hidden="true"></canvas>
     <div class="vignette"></div>
@@ -226,7 +226,7 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
         <button class="btn go" id="playBtn" type="button" aria-pressed="false"><svg class="i"><use id="playUse" href="#i-play"/></svg><span id="playTxt">تشغيل</span></button>
         <button class="btn" id="nextBtn" type="button" aria-label="التالي"><span class="lbl">التالي</span><svg class="i"><use href="#i-down"/></svg></button>
         <button class="btn say" id="speakBtn" type="button" aria-pressed="false" aria-label="تشغيل القراءة الصوتية" title="القراءة الصوتية: يقرأ كل فتح بصوت عالٍ"><svg class="i"><use href="#i-speaker"/></svg></button>
-        <button class="btn mic" id="voiceBtn" type="button" aria-pressed="false" aria-label="تشغيل الأوامر الصوتية" title="الأوامر الصوتية: قُل «التالي» أو «السابق»"><svg class="i"><use href="#i-mic"/></svg></button>
+        <button class="btn mic" id="voiceBtn" type="button" aria-pressed="false" aria-label="تشغيل الأوامر الصوتية" title="الأوامر الصوتية: قُل «وقّف» أو «التالي» أو «السابق» في أي وقت"><svg class="i"><use href="#i-mic"/></svg></button>
       </div>
     </div>
   </div>
@@ -730,8 +730,8 @@ function frame(now){
 }
 
 /* ---------- التحكم ---------- */
-$("prevBtn").addEventListener("click",function(){goTo(idx-1);});
-$("nextBtn").addEventListener("click",function(){goTo(idx+1);});
+$("prevBtn").addEventListener("click",function(){if(TTS){TTS.cancel();clearTimeout(speakTimer);speaking=false;speakUI();}goTo(idx-1);});
+$("nextBtn").addEventListener("click",function(){if(TTS){TTS.cancel();clearTimeout(speakTimer);speaking=false;speakUI();}goTo(idx+1);});
 function schedule(){clearTimeout(playTimer);playTimer=setTimeout(function(){if(idx<N-1){goTo(idx+1);schedule();}else{setPlay(false);}},speechOn?60000:8000);}
 function setPlay(on){
   playing=on;clearTimeout(playTimer);
@@ -761,172 +761,388 @@ if(window.ResizeObserver){new ResizeObserver(function(){resize();}).observe(stag
 if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){tiles.forEach(function(t,i){if(t.tex)drawTile(i);});drawMini();});}
 
 
-/* ---------- الأوامر الصوتية (لذوي الإعاقة الحركية) ---------- */
+/* ---------- الأوامر الصوتية (لذوي الإعاقة الحركية والبصرية) ---------- */
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 var vBtn=$("voiceBtn"),vBox=$("voice"),vTxt=$("voiceTxt");
-var voiceWant=false,rec=null,recOn=false,handled=-1,coolAt=0,lastCmd="",hitTimer=null;
+var voiceWant=false,rec=null,recOn=false,coolAt=0,lastCmd="",hitTimer=null;
+var isWelcomePlaying=false;
+
+// قواميس التعرف على الأوامر باللغة العربية بجميع اللهجات والفصحى
 var RX={
-  next:/(^| )(التالي|التاليه|التاني|الجاي|الجايه|بعده|كمل|next)( |$)/,
-  prev:/(^| )(السابق|السابقه|قبله|ارجع|رجوع|back|previous)( |$)/,
-  play:/(^| )(تشغيل|شغل|ابدا|ابدء|play|start)( |$)/,
-  pause:/(^| )(ايقاف|وقف|قف|توقف|توقيف|stop|pause)( |$)/,
-  first:/(^| )(البدايه|من الاول|الاول|الهجره)( |$)/,
-  last:/(^| )(الاخير|النهايه|الاخيره)( |$)/,
-  read:/(^| )(اقرا|اقراها|اقرالي|كرر|اعد|اعيد|اسمعني)( |$)/,
-  mute:/(^| )(اسكت|صمت|كفايه)( |$)/
+  next:/(?:^|\s)(التالي|التاليه|التاني|التانيه|الجاي|الجايه|اللي بعده|بعده|بعدها|قدم|تقدم|لقدام|كمل|next|forward)(?:\s|$)/,
+  prev:/(?:^|\s)(السابق|السابقه|اللي قبله|قبله|اللي قبلها|قبلها|ارجع|رجوع|لورا|ورا|previous|back)(?:\s|$)/,
+  pause:/(?:^|\s)(وقف|وقّف|توقف|ايقاف|إيقاف|قف|توقيف|بس|كفايه|كفاية|اسكت|صمت|اهدا|اهدأ|stop|pause)(?:\s|$)/,
+  play:/(?:^|\s)(تشغيل|شغل|ابدأ|ابدا|استمر|واصل|تابع|play|start|resume)(?:\s|$)/,
+  first:/(?:^|\s)(البدايه|البداية|من الاول|من الأول|اول شريحه|أول شريحة|الهجره|الهجرة|home|first)(?:\s|$)/,
+  last:/(?:^|\s)(الاخير|الأخير|الاخيره|الأخيرة|النهايه|النهاية|اخر شريحه|آخر شريحة|end|last)(?:\s|$)/,
+  read:/(?:^|\s)(اقرا|اقرأ|اقرالي|اقرأ لي|اقراها|اقرأها|كرر|كررها|عيد|أعد|اعد|اعيد|اسمع|اسمعني|سمعني|read)(?:\s|$)/
 };
-function norm(t){return String(t).replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[^\u0600-\u06FFa-z\s]/gi," ").toLowerCase().replace(/\s+/g," ").trim();}
+
+function norm(t){
+  return String(t||"")
+    .replace(/[\u064B-\u065F\u0670\u0640]/g,"")
+    .replace(/[أإآٱ]/g,"ا")
+    .replace(/ى/g,"ي")
+    .replace(/ة/g,"ه")
+    .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g," ")
+    .toLowerCase()
+    .replace(/\s+/g," ")
+    .trim();
+}
+
 function matchCmd(text){
-  var t=norm(text);if(!t||t.split(" ").length>5)return null;
-  var order=["next","prev","play","pause","first","last","read","mute"];
-  for(var i=0;i<order.length;i++){if(RX[order[i]].test(t))return order[i];}
+  var t=norm(text);
+  if(!t)return null;
+
+  // استبعاد صدى الرسالة الترحيبية إن كان المتصفح يقرأها بصوت عالٍ
+  if(isWelcomePlaying&&(t.indexOf("قل التالي")!==-1||t.indexOf("قل السابق")!==-1||t.indexOf("للانتقال")!==-1||t.indexOf("للرجوع")!==-1||t.indexOf("مرحبا بك")!==-1)){
+    return null;
+  }
+
+  // استبعاد صدى شريحة 28 "توقف التقدم شمالا" حتى لا توقف نفسها بنفسها
+  if(t.indexOf("توقف التقدم")!==-1&&t.indexOf("وقف")===-1&&t.indexOf("بس")===-1){
+    return null;
+  }
+
+  // ترتيب الأولويات: الإيقاف أولاً لمقاطعة القراءة الفورية
+  var order=["pause","next","prev","play","read","first","last"];
+  for(var i=0;i<order.length;i++){
+    if(RX[order[i]].test(t)){
+      return order[i];
+    }
+  }
   return null;
 }
-var CMD_LABEL={next:"التالي",prev:"السابق",play:"تشغيل",pause:"إيقاف",first:"البداية",last:"النهاية",read:"اقرأ",mute:"اسكت"};
+
+var CMD_LABEL={
+  next:"التالي",
+  prev:"السابق",
+  pause:"إيقاف",
+  play:"تشغيل",
+  first:"البداية",
+  last:"النهاية",
+  read:"اقرأ"
+};
+
 function runCmd(c){
-  if(c==="next")goTo(idx+1);
-  else if(c==="prev")goTo(idx-1);
-  else if(c==="play"){if(!playing)setPlay(true);}
-  else if(c==="pause"){if(playing)setPlay(false);}
-  else if(c==="first")goTo(0);
-  else if(c==="last")goTo(N-1);
-  else if(c==="read"){if(speechOn)speakNow(idx);else setSpeech(true);}
-  else if(c==="mute"){if(speechOn)setSpeech(false);}
+  // 1. مقاطعة القراءة الصوتية فورًا بمجرد إدراك أي أمر
+  isWelcomePlaying=false;
+  if(TTS){
+    TTS.cancel();
+    clearTimeout(speakTimer);
+    speaking=false;
+    speakUI();
+  }
+
+  // 2. تنفيذ الأمر
+  if(c==="pause"){
+    if(playing)setPlay(false);
+    voiceSay("سمعتك: «إيقاف» تم إيقاف القراءة.","live hit");
+    if($("live"))$("live").textContent="تم إيقاف القراءة الصوتية والعرض.";
+  }
+  else if(c==="next"){
+    if(idx<N-1){
+      goTo(idx+1);
+      voiceSay("سمعتك: «التالي» والانتقال إلى: "+EV[idx+1].short,"live hit");
+      if($("live"))$("live").textContent="الانتقال إلى التالي: "+EV[idx+1].name;
+    } else {
+      voiceSay("أنت في آخر حدث تاريخي.","live");
+    }
+  }
+  else if(c==="prev"){
+    if(idx>0){
+      goTo(idx-1);
+      voiceSay("سمعتك: «السابق» والرجوع إلى: "+EV[idx-1].short,"live hit");
+      if($("live"))$("live").textContent="الرجوع إلى السابق: "+EV[idx-1].name;
+    } else {
+      voiceSay("أنت في الحدث الأول (الهجرة).","live");
+    }
+  }
+  else if(c==="play"){
+    if(!playing)setPlay(true);
+    voiceSay("سمعتك: «تشغيل» بدء العرض التلقائي.","live hit");
+  }
+  else if(c==="read"){
+    if(!speechOn)setSpeech(true);
+    else speakNow(idx);
+    voiceSay("سمعتك: «اقرأ» إعادة قراءة الشريحة.","live hit");
+  }
+  else if(c==="first"){
+    goTo(0);
+    voiceSay("سمعتك: «البداية» العودة للمحطة الأولى.","live hit");
+  }
+  else if(c==="last"){
+    goTo(N-1);
+    voiceSay("سمعتك: «النهاية» الانتقال لآخر محطة.","live hit");
+  }
+
+  // 3. إعادة تهيئة التعرف على الصوت لتفريغ الذاكرة المؤقتة فورًا والاستعداد للأمر القادم
+  restartRec();
+
+  clearTimeout(hitTimer);
+  hitTimer=setTimeout(function(){
+    if(recOn){
+      if(speaking){
+        voiceSay("أستمع إليك… قُل «وقّف» أو «التالي» أو «السابق» في أي وقت","live");
+      } else {
+        voiceSay("أستمع إليك… قُل «التالي» أو «السابق» أو «اقرأ»","live");
+      }
+    }
+  },2200);
 }
+
 function voiceSay(msg,kind){
-  vTxt.textContent=msg;vBox.className="voice show"+(kind?" "+kind:"");
+  vTxt.textContent=msg;
+  vBox.className="voice show"+(kind?" "+kind:"");
 }
-function voiceHide(){vBox.className="voice";vTxt.textContent="";}
+function voiceHide(){
+  vBox.className="voice";
+  vTxt.textContent="";
+}
 function voiceUI(on){
-  vBtn.classList.toggle("on",on);vBtn.setAttribute("aria-pressed",on?"true":"false");
+  vBtn.classList.toggle("on",on);
+  vBtn.setAttribute("aria-pressed",on?"true":"false");
   vBtn.setAttribute("aria-label",on?"إيقاف الأوامر الصوتية":"تشغيل الأوامر الصوتية");
 }
+
+function restartRec(){
+  if(!voiceWant||!rec)return;
+  try{
+    rec.abort();
+  }catch(e){}
+}
+
 function startRec(){
   if(!voiceWant||recOn)return;
   try{
-    rec=new SR();rec.lang="ar-EG";rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=3;
-  }catch(e){voiceWant=false;voiceUI(false);voiceSay("تعذّر تشغيل الميكروفون في هذه الصفحة.","warn");return;}
-  handled=-1;
-  rec.onstart=function(){recOn=true;voiceSay("أستمع إليك… قُل «التالي» أو «السابق»","live");};
+    rec=new SR();
+    rec.lang="ar-EG";
+    rec.continuous=true;
+    rec.interimResults=true;
+    rec.maxAlternatives=3;
+  }catch(e){
+    voiceWant=false;
+    voiceUI(false);
+    voiceSay("تعذّر تشغيل الميكروفون في هذه الصفحة.","warn");
+    return;
+  }
+
+  rec.onstart=function(){
+    recOn=true;
+    voiceUI(true);
+    voiceSay(speaking?"أستمع إليك أثناء القراءة… قُل «وقّف» أو «التالي» أو «السابق»":"أستمع إليك… قُل «التالي» أو «السابق» أو «شغّل»","live");
+  };
+
   rec.onresult=function(ev){
     for(var i=ev.resultIndex;i<ev.results.length;i++){
-      if(i<=handled)continue;
-      var r=ev.results[i],cmd=null,heard=r[0]?r[0].transcript:"";
-      for(var a=0;a<r.length&&!cmd;a++){cmd=matchCmd(r[a].transcript);}
+      var r=ev.results[i];
+      if(!r)continue;
+      var cmd=null;
+      for(var a=0;a<r.length&&!cmd;a++){
+        cmd=matchCmd(r[a].transcript);
+      }
       if(cmd){
-        handled=i;
         var now=Date.now();
-        if(cmd!==lastCmd||now-coolAt>900){coolAt=now;lastCmd=cmd;runCmd(cmd);voiceSay("سمعتك: «"+CMD_LABEL[cmd]+"»","live hit");clearTimeout(hitTimer);hitTimer=setTimeout(function(){if(recOn)voiceSay("أستمع إليك… قُل «التالي» أو «السابق»","live");},1600);}
-      }else if(r.isFinal){
-        handled=i;
-        if(heard)voiceSay("سمعت: «"+heard.trim()+"». قُل «التالي» أو «السابق»","live");
-      }else if(heard){
-        voiceSay("أسمع: «"+heard.trim()+"»","live");
+        if(cmd!==lastCmd||now-coolAt>650){
+          coolAt=now;
+          lastCmd=cmd;
+          runCmd(cmd);
+          return;
+        }
+      } else {
+        var heard=(r[0]&&r[0].transcript)?r[0].transcript.trim():"";
+        if(heard&&!isWelcomePlaying){
+          if(r.isFinal){
+            voiceSay("سمعت: «"+heard+"» (قُل: التالي، السابق، وقّف)","live");
+          } else {
+            voiceSay("أسمعك: «"+heard+"»…","live");
+          }
+        }
       }
     }
   };
+
   rec.onerror=function(e){
     var c=e&&e.error;
+    if(c==="no-speech"){
+      return; // انتهاء مهلة صمت عادية من المتصفح - سيعاد التشغيل تلقائيًا في onend
+    }
     if(c==="not-allowed"||c==="service-not-allowed"){
-      voiceWant=false;voiceUI(false);
-      voiceSay("الميكروفون غير متاح في هذه الصفحة. افتح النسخة المستقلة من التطبيق على رابط https واسمح بالميكروفون.","warn");
-    }else if(c==="audio-capture"){
-      voiceWant=false;voiceUI(false);voiceSay("لم أجد ميكروفونًا متصلًا بالجهاز.","warn");
-    }else if(c==="network"){
+      voiceWant=false;
+      voiceUI(false);
+      voiceSay("الميكروفون بحاجة لإذنك. اضغط على أيقونة الميكروفون بالأعلى واسمح بالوصول.","warn");
+    } else if(c==="audio-capture"){
+      voiceWant=false;
+      voiceUI(false);
+      voiceSay("لم أجد ميكروفونًا متصلًا بالجهاز.","warn");
+    } else if(c==="network"){
       voiceSay("التعرّف على الصوت يحتاج اتصالًا بالإنترنت.","warn");
     }
   };
+
   rec.onend=function(){
     recOn=false;
-    if(voiceWant){setTimeout(startRec,350);}else{voiceUI(false);}
+    if(voiceWant){
+      setTimeout(startRec,80);
+    } else {
+      voiceUI(false);
+    }
   };
-  try{rec.start();}catch(e2){recOn=false;}
-}
-function setVoice(on){
-  voiceWant=on;voiceUI(on);
-  try{localStorage.setItem("fotouh-voice",on?"on":"off");}catch(e){}
-  if(on){
-    if(!SR){voiceWant=false;voiceUI(false);voiceSay("متصفحك لا يدعم الأوامر الصوتية. جرّب Chrome أو Edge.","warn");return;}
-    voiceSay("جارٍ تشغيل الميكروفون…","live");startRec();
-  }else{
-    try{if(rec)rec.abort();}catch(e){}
-    recOn=false;voiceHide();
+
+  try{
+    rec.start();
+  }catch(e2){
+    recOn=false;
   }
 }
+
+function setVoice(on){
+  voiceWant=on;
+  voiceUI(on);
+  try{localStorage.setItem("fotouh-voice",on?"on":"off");}catch(e){}
+  if(on){
+    if(!SR){
+      voiceWant=false;
+      voiceUI(false);
+      voiceSay("متصفحك لا يدعم الأوامر الصوتية. يُنصح باستخدام Chrome أو Edge.","warn");
+      return;
+    }
+    voiceSay("جارٍ تشغيل الميكروفون للاستماع إليك…","live");
+    startRec();
+  } else {
+    try{if(rec)rec.abort();}catch(e){}
+    recOn=false;
+    voiceHide();
+  }
+}
+
 vBtn.addEventListener("click",function(){setVoice(!voiceWant);});
-// إن سبق للمستخدم تشغيلها ومنح الإذن، نشغّلها تلقائيًا بلا حاجة للمس الشاشة
-(function(){
-  try{
-    if(!SR||localStorage.getItem("fotouh-voice")!=="on"||!navigator.permissions)return;
-    navigator.permissions.query({name:"microphone"}).then(function(r){if(r.state==="granted")setVoice(true);}).catch(function(){});
-  }catch(e){}
-})();
 
 /* ---------- القراءة الصوتية لكل شريحة ---------- */
 var TTS=window.speechSynthesis||null,speechOn=false,speakTok=0,speakTimer=null,speaking=false,arVoice=null,rateIdx=1;
 var RATES=[0.8,0.95,1.1,1.25],RATE_LABEL=["بطيئة","عادية","أسرع","سريعة"];
 var speakBtn=$("speakBtn"),rateBtn=$("rateBtn");
+
 function pickVoice(){
-  arVoice=null;if(!TTS)return;
+  arVoice=null;
+  if(!TTS)return;
   var vs=TTS.getVoices()||[],pref=["ar-eg","ar-sa"];
   function lg(v){return String(v.lang||"").replace("_","-").toLowerCase();}
-  for(var i=0;i<pref.length&&!arVoice;i++){for(var j=0;j<vs.length;j++){if(lg(vs[j])===pref[i]){arVoice=vs[j];break;}}}
-  if(!arVoice){for(var k=0;k<vs.length;k++){if(lg(vs[k]).indexOf("ar")===0){arVoice=vs[k];break;}}}
+  for(var i=0;i<pref.length&&!arVoice;i++){
+    for(var j=0;j<vs.length;j++){
+      if(lg(vs[j])===pref[i]){arVoice=vs[j];break;}
+    }
+  }
+  if(!arVoice){
+    for(var k=0;k<vs.length;k++){
+      if(lg(vs[k]).indexOf("ar")===0){arVoice=vs[k];break;}
+    }
+  }
 }
-if(TTS){pickVoice();if(TTS.addEventListener)TTS.addEventListener("voiceschanged",pickVoice);}
+if(TTS){
+  pickVoice();
+  if(TTS.addEventListener)TTS.addEventListener("voiceschanged",pickVoice);
+}
+
 function speechText(i){
   var e=EV[i];
   var t=e.name+". سنة "+ar(e.g)+" ميلادية، الموافقة لسنة "+ar(e.h)+" هجرية. القائد: "+e.who+". المكان: "+e.place+". ماذا حدث؟ "+e.what+" لماذا هو مهم؟ "+e.why;
   return t.replace(/ﷺ/g," صلى الله عليه وسلم ");
 }
+
 function chunks(t){
   var parts=t.match(/[^.!؟?،]+[.!؟?،]?/g)||[t],out=[],cur="";
-  parts.forEach(function(p){if((cur+p).length<160){cur+=p;}else{if(cur)out.push(cur);cur=p;}});
-  if(cur)out.push(cur);return out;
+  parts.forEach(function(p){
+    if((cur+p).length<160){cur+=p;}
+    else{if(cur)out.push(cur);cur=p;}
+  });
+  if(cur)out.push(cur);
+  return out;
 }
+
 function speakUI(){speakBtn.classList.toggle("talk",speaking);}
+
 function afterSpeech(){
   if(playing&&speechOn){
     clearTimeout(playTimer);
-    playTimer=setTimeout(function(){if(idx<N-1){goTo(idx+1);schedule();}else{setPlay(false);}},1600);
+    playTimer=setTimeout(function(){
+      if(idx<N-1){goTo(idx+1);schedule();}
+      else{setPlay(false);}
+    },1600);
   }
 }
+
 function speakNow(i){
   if(!TTS||!speechOn)return;
-  TTS.cancel();clearTimeout(speakTimer);
+  TTS.cancel();
+  clearTimeout(speakTimer);
   var tok=++speakTok,list=chunks(speechText(i)),n=list.length;
-  speaking=true;speakUI();
+  speaking=true;
+  speakUI();
+  if(voiceWant&&recOn){
+    voiceSay("جاري القراءة… يمكنك مقاطعتي بقول «وقّف» أو «التالي» أو «السابق» في أي وقت","live");
+  }
   list.forEach(function(txt,k){
     var u=new SpeechSynthesisUtterance(txt);
-    u.lang=arVoice?arVoice.lang:"ar-SA";if(arVoice)u.voice=arVoice;u.rate=RATES[rateIdx];
+    u.lang=arVoice?arVoice.lang:"ar-SA";
+    if(arVoice)u.voice=arVoice;
+    u.rate=RATES[rateIdx];
+    u.volume=0.88; // إعطاء مساحة عزل صوتي للميكروفون ليسمع صوت المستخدم بوضوح
     var finish=function(ev){
       if(tok!==speakTok)return;
       if(ev&&(ev.error==="interrupted"||ev.error==="canceled"))return;
-      if(k===n-1){speaking=false;speakUI();afterSpeech();}
+      if(k===n-1){
+        speaking=false;
+        speakUI();
+        if(voiceWant&&recOn){
+          voiceSay("أستمع إليك… قُل «التالي» أو «السابق» أو «اقرأ»","live");
+        }
+        afterSpeech();
+      }
     };
-    u.onend=finish;u.onerror=finish;
+    u.onend=finish;
+    u.onerror=finish;
     TTS.speak(u);
   });
 }
+
 function scheduleSpeak(){
-  ++speakTok;if(TTS)TTS.cancel();speaking=false;speakUI();
-  clearTimeout(speakTimer);speakTimer=setTimeout(function(){speakNow(idx);},450);
+  ++speakTok;
+  if(TTS)TTS.cancel();
+  speaking=false;
+  speakUI();
+  clearTimeout(speakTimer);
+  speakTimer=setTimeout(function(){speakNow(idx);},380);
 }
+
 function setSpeech(on){
-  if(on&&!TTS){voiceSay("متصفحك لا يدعم القراءة الصوتية.","warn");return;}
-  speechOn=on;speakBtn.classList.toggle("on",on);speakBtn.setAttribute("aria-pressed",on?"true":"false");
+  if(on&&!TTS){
+    voiceSay("متصفحك لا يدعم القراءة الصوتية.","warn");
+    return;
+  }
+  speechOn=on;
+  speakBtn.classList.toggle("on",on);
+  speakBtn.setAttribute("aria-pressed",on?"true":"false");
   speakBtn.setAttribute("aria-label",on?"إيقاف القراءة الصوتية":"تشغيل القراءة الصوتية");
   rateBtn.hidden=!on;
   if(on){
-    if((TTS.getVoices()||[]).length&&!arVoice)voiceSay("جهازك ليس به صوت عربي. ثبّت صوتًا عربيًا من إعدادات النظام ليكون النطق صحيحًا.","warn");
+    if((TTS.getVoices()||[]).length&&!arVoice){
+      voiceSay("جهازك ليس به صوت عربي. ثبّت صوتًا عربيًا من إعدادات النظام ليكون النطق صحيحًا.","warn");
+    }
     speakNow(idx);
-  }else{
-    ++speakTok;clearTimeout(speakTimer);TTS.cancel();speaking=false;speakUI();
+  } else {
+    ++speakTok;
+    clearTimeout(speakTimer);
+    TTS.cancel();
+    speaking=false;
+    speakUI();
   }
 }
+
 speakBtn.addEventListener("click",function(){setSpeech(!speechOn);});
 rateBtn.addEventListener("click",function(){
-  rateIdx=(rateIdx+1)%RATES.length;rateBtn.textContent="السرعة: "+RATE_LABEL[rateIdx];
+  rateIdx=(rateIdx+1)%RATES.length;
+  rateBtn.textContent="السرعة: "+RATE_LABEL[rateIdx];
   if(speechOn)speakNow(idx);
 });
 window.addEventListener("pagehide",function(){if(TTS)TTS.cancel();});
@@ -940,30 +1156,31 @@ requestAnimationFrame(frame);
 
 /* ---------- تفعيل تلقائي لإمكانية الوصول ---------- */
 (function autoAccessibility(){
-  // تفعيل القراءة الصوتية تلقائيًا
-  setTimeout(function(){
-    if(TTS){
-      setSpeech(true);
-      // رسالة ترحيبية صوتية للمكفوفين
-      var welcome=new SpeechSynthesisUtterance("مرحبًا بك في رحلة الفتوحات الإسلامية. يمكنك التحكم بالصوت. قُل: التالي، للانتقال للشريحة التالية. أو السابق، للرجوع. أو شغّل، لبدء العرض التلقائي. أو وقّف، لإيقافه. أو اقرأ، لسماع محتوى الشريحة الحالية.");
-      welcome.lang=arVoice?arVoice.lang:"ar-SA";
-      if(arVoice)welcome.voice=arVoice;
-      welcome.rate=0.9;
-      welcome.onend=function(){
-        // بعد رسالة الترحيب، اقرأ أول شريحة
-        setTimeout(function(){ speakNow(0); },800);
-      };
-      TTS.speak(welcome);
-    }
-  },600);
+  // أول تفاعل بأي نقر أو لمس أو زر يضمن تفعيل الصوت والميكروفون بصلاحيات المتصفح
+  function unlockOnGesture(){
+    window.removeEventListener("click",unlockOnGesture);
+    window.removeEventListener("keydown",unlockOnGesture);
+    window.removeEventListener("touchstart",unlockOnGesture);
+    if(TTS&&!speechOn)setSpeech(true);
+    if(SR&&!voiceWant)setVoice(true);
+  }
+  window.addEventListener("click",unlockOnGesture,{passive:true});
+  window.addEventListener("keydown",unlockOnGesture,{passive:true});
+  window.addEventListener("touchstart",unlockOnGesture,{passive:true});
 
-  // تفعيل الأوامر الصوتية تلقائيًا (الميكروفون)
-  setTimeout(function(){
-    if(SR){
-      // نحاول تشغيل الميكروفون مباشرة، وإن فشل (لأن المستخدم لم يمنح الإذن بعد) نعرض رسالة
+  // تفعيل الميكروفون تلقائيًا للاستماع للأوامر
+  if(SR){
+    setTimeout(function(){
       setVoice(true);
-    }
-  },1200);
+    },400);
+  }
+
+  // تفعيل القراءة الصوتية للشريحة الأولى
+  if(TTS){
+    setTimeout(function(){
+      setSpeech(true);
+    },800);
+  }
 })();
 })();
 </script>
