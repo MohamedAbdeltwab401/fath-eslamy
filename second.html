@@ -1,5 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>رحلة الفتوحات</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><title>رحلة الفتوحات</title><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600&family=Reem+Kufi:wght@500;700&display=swap">
@@ -61,7 +60,7 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
 .tools{display:flex;align-items:center;gap:8px}
 .pill{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:.85rem;font-variant-numeric:tabular-nums}
 .pill b{font-weight:600}
-.ibtn{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.ibtn{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .ibtn:hover{border-color:var(--fg2)}
 .ibtn[aria-pressed="true"]{border-color:var(--accent)}
 .prog{position:absolute;z-index:6;inset-inline:0;top:0;height:3px;background:transparent}
@@ -72,7 +71,7 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
 
 .rail{inset-inline-start:14px;top:50%;transform:translateY(-50%);margin-top:20px}
 .rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
-.rail button{position:relative;display:grid;place-items:center;width:26px;height:min(19px,2.6vh);background:none;border:0;padding:0}
+.rail button{position:relative;display:grid;place-items:center;width:44px;height:max(28px,3.2vh);background:none;border:0;padding:0}
 .rail .t{width:7px;height:7px;border-radius:50%;background:var(--pc);opacity:.45;transition:transform .2s,opacity .2s}
 .rail .on .t{opacity:1;transform:scale(1.9);box-shadow:0 0 0 3px var(--bg),0 0 0 4.5px var(--accent)}
 .rail .past .t{opacity:.95}
@@ -86,20 +85,20 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
 .hint svg{animation:bob 1.4s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(4px)}}
 .ctrls{display:flex;gap:8px;padding:6px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 18px;border-radius:999px;background:transparent;border:0;font-weight:500}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;min-height:44px;padding:0 18px;border-radius:999px;background:transparent;border:0;font-weight:500}
 .btn:hover{background:rgba(127,160,190,.16)}
 .btn[disabled]{opacity:.35;cursor:default}
 .btn.go{background:var(--accent);color:var(--on-accent);font-weight:600;min-width:118px}
 .btn.go:hover{filter:brightness(1.08)}
 
-.btn.mic{padding:0;width:42px;position:relative}
+.btn.mic{padding:0;width:44px;min-width:44px;position:relative}
 .btn.mic.on{background:var(--accent);color:var(--on-accent)}
 .btn.mic.on::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--accent);animation:ring 1.6s ease-out infinite}
 @keyframes ring{from{transform:scale(.85);opacity:.9}to{transform:scale(1.35);opacity:0}}
-.btn.say{padding:0;width:42px;position:relative}
+.btn.say{padding:0;width:44px;min-width:44px;position:relative}
 .btn.say.on{background:var(--accent);color:var(--on-accent)}
 .btn.say.talk::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--accent);animation:ring 1.6s ease-out infinite}
-@media (max-width:480px){.btn .lbl{display:none}.btn:not(.go):not(.mic):not(.say){padding:0;width:42px}}
+@media (max-width:480px){.btn .lbl{display:none}.btn:not(.go):not(.mic):not(.say){padding:0;width:44px;min-width:44px}}
 @media (max-width:759px){#rateBtn{display:none!important}}
 .voice{display:none;align-items:center;gap:10px;max-width:min(92vw,560px);padding:6px 16px;min-height:36px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:.85rem}
 .voice.show{display:inline-flex}
@@ -170,7 +169,11 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
   .more,.more-in,.rail .t{transition:none}
   .hint svg{animation:none}
   .btn.mic.on::after,.btn.say.talk::after{animation:none}
+  .sc{will-change:auto}
 }
+/* Skip link for keyboard users */
+.skip-link{position:absolute;top:-100%;left:0;background:var(--accent);color:var(--on-accent);padding:8px 16px;z-index:100;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link:focus{top:0}
 .nogl-msg{position:absolute;z-index:3;inset-inline:16px;top:96px;text-align:center;color:var(--fg2);display:none}
 .nogl .nogl-msg{display:block}
 </style>
@@ -191,9 +194,10 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
   <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></symbol>
 </svg>
 
-<div class="scroller" id="scroller" dir="rtl" lang="ar" role="main" aria-label="رحلة الفتوحات الإسلامية - عرض تفاعلي">
-  <div class="sr" id="a11yWelcome" aria-live="assertive" role="alert">مرحبًا بك في رحلة الفتوحات الإسلامية. هذا الموقع يدعم التحكم الكامل بالصوت. يمكنك التحدث في أي وقت حتى أثناء القراءة؛ قُل «وقّف» للإيقاف الفوري، أو «التالي» للانتقال للشريحة التالية، أو «السابق» للرجوع، أو «شغّل» لبدء العرض، أو «اقرأ» لسماع الشريحة.</div>
-  <div class="stage" id="stage">
+<div class="scroller" id="scroller" dir="rtl" lang="ar">
+  <a class="skip-link" href="#cards">تخطَّ إلى المحتوى الرئيسي</a>
+  <div class="sr" id="a11yWelcome" role="note">مرحبًا بك في رحلة الفتوحات الإسلامية. استخدم أزرار «السابق» و«التالي» للتنقل بين الأحداث، أو استخدم مفاتيح الأسهم. يمكنك تفعيل القراءة الصوتية والأوامر الصوتية من شريط التحكم.</div>
+  <main class="stage" id="stage" aria-label="رحلة الفتوحات الإسلامية - عرض تفاعلي">
     <canvas id="gl" aria-hidden="true"></canvas>
     <div class="vignette"></div>
     <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
@@ -215,7 +219,10 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
 
     <figure class="hud mini" style="margin:0">
       <small>خريطة الرحلة (اضغط على نقطة للانتقال)</small>
-      <canvas id="mini" aria-label="خريطة مسطّحة لكل المواقع"></canvas>
+      <canvas id="mini" aria-hidden="true"></canvas>
+      <nav class="sr" aria-label="قائمة مواقع الخريطة">
+        <ol id="miniList"></ol>
+      </nav>
     </figure>
 
     <div class="hud dock">
@@ -229,7 +236,7 @@ svg.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-
         <button class="btn mic" id="voiceBtn" type="button" aria-pressed="false" aria-label="تشغيل الأوامر الصوتية" title="الأوامر الصوتية: قُل «وقّف» أو «التالي» أو «السابق» في أي وقت"><svg class="i"><use href="#i-mic"/></svg></button>
       </div>
     </div>
-  </div>
+  </main>
   <div class="sr" id="live" aria-live="polite"></div>
 </div>
 
@@ -368,6 +375,8 @@ function readPalette(){
 }
 readPalette();
 var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var reduceQuery=window.matchMedia("(prefers-reduced-motion: reduce)");
+reduceQuery.addEventListener("change",function(e){reduce=e.matches;requestRender();});
 function $(id){return document.getElementById(id);}
 
 /* ---------- الحالة ---------- */
@@ -386,7 +395,9 @@ var cards=[],cardH=[];
   EV.forEach(function(e,i){
     var a=document.createElement("article");
     a.className="sc";a.style.setProperty("--pc","var("+PERIODS[e.period].v+")");
-    a.setAttribute("aria-hidden","true");
+    a.setAttribute("tabindex","0");
+    a.setAttribute("role","article");
+    a.setAttribute("aria-label",e.name+"، سنة "+ar(e.g)+" ميلادية");
     a.innerHTML=
      '<div class="sc-grid">'+
        '<div class="yrs"><div class="g"><span class="gn">'+ar(e.g)+'</span><span class="gu">م</span></div><div class="h"><span class="hn">'+ar(e.h)+'</span><span class="hu">هـ</span></div></div>'+
@@ -403,6 +414,7 @@ var cards=[],cardH=[];
        '</div>'+
      '</div>';
     a.addEventListener("click",function(){if(i!==idx)goTo(i);});
+    a.addEventListener("keydown",function(ev){if((ev.key==="Enter"||ev.key===" ")&&i!==idx){ev.preventDefault();goTo(i);}});
     host.appendChild(a);cards.push(a);cardH.push(0);
   });
 })();
@@ -418,6 +430,21 @@ var railBtns=[];
     b.setAttribute("aria-label",e.name+"، سنة "+ar(e.g)+" ميلادية");
     b.addEventListener("click",function(){goTo(i);});
     li.appendChild(b);ol.appendChild(li);railBtns.push(b);
+  });
+})();
+
+/* ---------- قائمة مواقع الخريطة لقارئات الشاشة ---------- */
+(function(){
+  var ml=$("miniList");
+  if(!ml)return;
+  EV.forEach(function(e,i){
+    var li=document.createElement("li");
+    var btn=document.createElement("button");
+    btn.type="button";
+    btn.textContent=ar(e.g)+" م – "+e.name+" ("+e.place+")";
+    btn.style.cssText="background:none;border:none;color:inherit;font:inherit;cursor:pointer;text-align:inherit;padding:4px 0";
+    btn.addEventListener("click",function(){goTo(i);});
+    li.appendChild(btn);ml.appendChild(li);
   });
 })();
 
@@ -452,7 +479,7 @@ function drawMini(){
 mini.addEventListener("click",function(ev){
   var r=mini.getBoundingClientRect(),px=(ev.clientX-r.left)/r.width*mw,py=(ev.clientY-r.top)/r.height*mh,best=-1,bd=1e9;
   for(var i=0;i<N;i++){var dx=mmx(EV[i].lon)-px,dy=mmy(EV[i].lat)-py,d=Math.sqrt(dx*dx+dy*dy);if(d<bd){bd=d;best=i;}}
-  if(best>=0&&bd<22*mdpr)goTo(best);
+  if(best>=0&&bd<32*mdpr)goTo(best);
 });
 
 /* ---------- المشهد ثلاثي الأبعاد ---------- */
@@ -462,7 +489,8 @@ function initScene(){
   if(typeof THREE==="undefined"){stage.classList.add("nogl");return;}
   try{renderer=new THREE.WebGLRenderer({canvas:$("gl"),antialias:true});}catch(err){stage.classList.add("nogl");return;}
   gl=true;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  var maxDPR=Math.min(window.devicePixelRatio||1,navigator.hardwareConcurrency>4?2:1.5);
+  renderer.setPixelRatio(maxDPR);
   scene=new THREE.Scene();
   scene.fog=new THREE.Fog(palette.bg,16,74);
   camera=new THREE.PerspectiveCamera(46,1,0.1,120);
@@ -631,6 +659,7 @@ function layout(){
 var settled=0;
 function onScroll(){
   P=clamp((window.pageYOffset||document.documentElement.scrollTop)/SEG,0,N-1);
+  requestRender();
   clearTimeout(snapTimer);
   snapTimer=setTimeout(function(){
     if(touching)return;
@@ -646,13 +675,17 @@ function onScroll(){
 window.addEventListener("scroll",onScroll,{passive:true});
 window.addEventListener("touchstart",function(){touching=true;},{passive:true});
 window.addEventListener("touchend",function(){touching=false;clearTimeout(snapTimer);snapTimer=setTimeout(onScroll,170);},{passive:true});
-function goTo(i){i=clamp(i,0,N-1);window.scrollTo({top:i*SEG,behavior:reduce?"auto":"smooth"});}
+function goTo(i){i=clamp(i,0,N-1);requestRender();window.scrollTo({top:i*SEG,behavior:reduce?"auto":"smooth"});}
 
 /* ---------- تحديث الحالة النشطة ---------- */
 function setActive(i){
   idx=i;
   var e=EV[i];
-  cards.forEach(function(c,k){c.classList.toggle("act",k===i);c.setAttribute("aria-hidden",k===i?"false":"true");});
+  cards.forEach(function(c,k){
+    c.classList.toggle("act",k===i);
+    c.setAttribute("aria-current",k===i?"true":"false");
+    c.setAttribute("tabindex",k===i?"0":"-1");
+  });
   railBtns.forEach(function(b,k){b.classList.toggle("on",k===i);b.classList.toggle("past",k<i);if(k===i)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");});
   $("cnt").textContent=ar(i+1)+" / "+ar(N);
   $("prevBtn").disabled=i===0;$("nextBtn").disabled=i===N-1;
@@ -665,7 +698,7 @@ function setActive(i){
 /* ---------- وضع البطاقات: بطاقة نشطة في المقدمة وطابور خلفها ---------- */
 var tv=null,LY={T0:180,hAct:300,w:800,h:600,dock:112},viewShift=0;
 function computeLayout(){
-  var w=stage.clientWidth,h=stage.clientHeight,wide=w>=760,dock=(wide?112:104)+($("voice").classList.contains("show")?44:0),head=64;
+  var w=stage.clientWidth||800,h=stage.clientHeight||600,wide=w>=760,dock=(wide?112:104)+($("voice").classList.contains("show")?44:0),head=64;
   var hAct=cards[idx].offsetHeight||300;
   for(var i=0;i<N;i++){var k=i-cur;if(k>-0.85&&k<5.5)cardH[i]=cards[i].offsetHeight||cardH[i]||80;}
   var avail=h-dock-head-hAct-10;
@@ -699,14 +732,20 @@ function placeCards(){
 
 /* ---------- الحلقة الرئيسية ---------- */
 var last=performance.now(),tAcc=0;
+var needsRender=true,idleFrames=0,MAX_IDLE=30,rafId=0,lastCur=-1,progBarEl=$("progBar");
+function requestRender(){needsRender=true;idleFrames=0;if(!rafId)rafId=requestAnimationFrame(frame);}
 function frame(now){
-  requestAnimationFrame(frame);
-  if(document.hidden)return;
+  rafId=0;
+  if(document.hidden){rafId=requestAnimationFrame(frame);return;}
   var dt=Math.min(.05,(now-last)/1000);last=now;tAcc+=dt;
+  var prevCur=cur;
   cur=reduce?P:cur+(P-cur)*(1-Math.exp(-dt*5.5));
   if(Math.abs(P-cur)<0.0005)cur=P;
-  var ni=clamp(Math.round(cur),0,N-1);if(ni!==idx)setActive(ni);
-  $("progBar").style.width=(cur/(N-1)*100).toFixed(2)+"%";
+  var curMoved=Math.abs(cur-prevCur)>0.0001;
+  var ni=clamp(Math.round(cur),0,N-1);
+  if(ni!==idx)setActive(ni);
+  /* Update progress bar only when cur changes meaningfully */
+  if(curMoved||lastCur<0){progBarEl.style.width=(cur/(N-1)*100).toFixed(2)+"%";lastCur=cur;}
   computeLayout();
   if(gl){
     var zc=-cur*S+D,w=LY.w,h=LY.h;
@@ -721,12 +760,21 @@ function frame(now){
     viewShift=reduce?shift:viewShift+(shift-viewShift)*(1-Math.exp(-dt*6));
     camera.setViewOffset(w,h,0,viewShift,w,h);
     pulse.position.set(0,0.05,-idx*S);
-    var ph=(tAcc%1.8)/1.8;
-    if(reduce){pulse.scale.setScalar(1.4);pulse.material.opacity=.9;}else{pulse.scale.setScalar(1+ph*2.2);pulse.material.opacity=(1-ph)*.9;}
+    if(reduce){pulse.scale.setScalar(1.4);pulse.material.opacity=.9;}
+    else{var ph=(tAcc%1.8)/1.8;pulse.scale.setScalar(1+ph*2.2);pulse.material.opacity=(1-ph)*.9;}
     ensureTiles();
     renderer.render(scene,camera);
   }
   placeCards();
+  /* Idle detection: stop the loop after settling */
+  if(curMoved||needsRender||!reduce){
+    idleFrames=0;needsRender=false;
+    rafId=requestAnimationFrame(frame);
+  }else{
+    idleFrames++;
+    if(idleFrames<MAX_IDLE){rafId=requestAnimationFrame(frame);}
+    /* else: loop stops until requestRender() is called */
+  }
 }
 
 /* ---------- التحكم ---------- */
@@ -744,28 +792,36 @@ $("playBtn").addEventListener("click",function(){setPlay(!playing);});
 document.addEventListener("keydown",function(e){
   if(e.altKey||e.ctrlKey||e.metaKey)return;
   var t=e.target&&e.target.tagName;if(t==="INPUT"||t==="TEXTAREA")return;
+  /* Don't intercept Space/Enter when a button is focused */
+  var isBtn=e.target&&(e.target.tagName==="BUTTON"||e.target.getAttribute("role")==="button");
   var k=e.key;
   if(k==="ArrowDown"||k==="PageDown"||k==="ArrowLeft"){goTo(idx+1);e.preventDefault();}
   else if(k==="ArrowUp"||k==="PageUp"||k==="ArrowRight"){goTo(idx-1);e.preventDefault();}
   else if(k==="Home"){goTo(0);e.preventDefault();}
   else if(k==="End"){goTo(N-1);e.preventDefault();}
+  else if(k==="Escape"){
+    if(playing)setPlay(false);
+    if(TTS&&speaking){TTS.cancel();clearTimeout(speakTimer);speaking=false;speakUI();}
+    e.preventDefault();
+  }
+  else if(k===" "&&!isBtn){setPlay(!playing);e.preventDefault();}
 });
 function effectiveLight(){var t=root.getAttribute("data-theme");if(t)return t==="light";return window.matchMedia("(prefers-color-scheme: light)").matches;}
-function refreshTheme(){readPalette();miniBase=null;applySceneTheme();drawMini();}
+function refreshTheme(){readPalette();miniBase=null;applySceneTheme();drawMini();requestRender();}
 $("themeBtn").addEventListener("click",function(){root.setAttribute("data-theme",effectiveLight()?"dark":"light");});
 window.matchMedia("(prefers-color-scheme: light)").addEventListener("change",refreshTheme);
 new MutationObserver(refreshTheme).observe(root,{attributes:true,attributeFilter:["data-theme"]});
-$("textBtn").addEventListener("click",function(){var on=root.classList.toggle("big");this.setAttribute("aria-pressed",on?"true":"false");});
-window.addEventListener("resize",function(){miniBase=null;resize();drawMini();});
-if(window.ResizeObserver){new ResizeObserver(function(){resize();}).observe(stage);}
-if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){tiles.forEach(function(t,i){if(t.tex)drawTile(i);});drawMini();});}
+$("textBtn").addEventListener("click",function(){var on=root.classList.toggle("big");this.setAttribute("aria-pressed",on?"true":"false");requestRender();});
+window.addEventListener("resize",function(){miniBase=null;resize();drawMini();requestRender();});
+if(window.ResizeObserver){new ResizeObserver(function(){resize();requestRender();}).observe(stage);}
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){tiles.forEach(function(t,i){if(t.tex)drawTile(i);});drawMini();requestRender();});}
+document.addEventListener("visibilitychange",function(){if(!document.hidden)requestRender();});
 
 
 /* ---------- الأوامر الصوتية (لذوي الإعاقة الحركية والبصرية) ---------- */
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 var vBtn=$("voiceBtn"),vBox=$("voice"),vTxt=$("voiceTxt");
 var voiceWant=false,rec=null,recOn=false,coolAt=0,lastCmd="",hitTimer=null;
-var isWelcomePlaying=false;
 
 // قواميس التعرف على الأوامر باللغة العربية بجميع اللهجات والفصحى
 var RX={
@@ -795,7 +851,7 @@ function matchCmd(text){
   if(!t)return null;
 
   // استبعاد صدى الرسالة الترحيبية إن كان المتصفح يقرأها بصوت عالٍ
-  if(isWelcomePlaying&&(t.indexOf("قل التالي")!==-1||t.indexOf("قل السابق")!==-1||t.indexOf("للانتقال")!==-1||t.indexOf("للرجوع")!==-1||t.indexOf("مرحبا بك")!==-1)){
+  if(speaking&&(t.indexOf("قل التالي")!==-1||t.indexOf("قل السابق")!==-1||t.indexOf("للانتقال")!==-1||t.indexOf("للرجوع")!==-1||t.indexOf("مرحبا بك")!==-1)){
     return null;
   }
 
@@ -826,7 +882,6 @@ var CMD_LABEL={
 
 function runCmd(c){
   // 1. مقاطعة القراءة الصوتية فورًا بمجرد إدراك أي أمر
-  isWelcomePlaying=false;
   if(TTS){
     TTS.cancel();
     clearTimeout(speakTimer);
@@ -951,7 +1006,7 @@ function startRec(){
         }
       } else {
         var heard=(r[0]&&r[0].transcript)?r[0].transcript.trim():"";
-        if(heard&&!isWelcomePlaying){
+        if(heard&&!speaking){
           if(r.isFinal){
             voiceSay("سمعت: «"+heard+"» (قُل: التالي، السابق، وقّف)","live");
           } else {
@@ -1152,36 +1207,15 @@ tv=(typeof THREE!=="undefined")?new THREE.Vector3():null;
 initScene();
 layout();
 setActive(0);
-requestAnimationFrame(frame);
+computeLayout();
+placeCards();
+requestRender();
 
-/* ---------- تفعيل تلقائي لإمكانية الوصول ---------- */
-(function autoAccessibility(){
-  // أول تفاعل بأي نقر أو لمس أو زر يضمن تفعيل الصوت والميكروفون بصلاحيات المتصفح
-  function unlockOnGesture(){
-    window.removeEventListener("click",unlockOnGesture);
-    window.removeEventListener("keydown",unlockOnGesture);
-    window.removeEventListener("touchstart",unlockOnGesture);
-    if(TTS&&!speechOn)setSpeech(true);
-    if(SR&&!voiceWant)setVoice(true);
-  }
-  window.addEventListener("click",unlockOnGesture,{passive:true});
-  window.addEventListener("keydown",unlockOnGesture,{passive:true});
-  window.addEventListener("touchstart",unlockOnGesture,{passive:true});
-
-  // تفعيل الميكروفون تلقائيًا للاستماع للأوامر
-  if(SR){
-    setTimeout(function(){
-      setVoice(true);
-    },400);
-  }
-
-  // تفعيل القراءة الصوتية للشريحة الأولى
-  if(TTS){
-    setTimeout(function(){
-      setSpeech(true);
-    },800);
-  }
-})();
+/* ---------- إمكانية الوصول: لا تفعيل تلقائي ---------- */
+/* Microphone and TTS are now ONLY activated by explicit button clicks.
+   The speakBtn and voiceBtn already have click handlers (setSpeech / setVoice).
+   No auto-activation on page load, no gesture hijacking.
+   This respects user privacy and does not interfere with screen readers. */
 })();
 </script>
 
